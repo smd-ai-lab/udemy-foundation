@@ -1,0 +1,450 @@
+Voici un document HTML complet qui présente l'écosystème du développement par IA sous forme de carte catégorisée, prêt à être enregistré et consulté dans un navigateur.
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Écosystème du développement par IA | Cartographie complète 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f1f5f9;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            padding: 2rem 1.5rem;
+            color: #0f172a;
+            line-height: 1.4;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* header */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0f172a, #3b82f6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .hero p {
+            color: #334155;
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .badge-date {
+            display: inline-block;
+            background: #e2e8f0;
+            border-radius: 40px;
+            padding: 0.2rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #1e293b;
+            margin-top: 1rem;
+        }
+
+        /* grille des catégories */
+        .ecosystem-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 1.75rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            overflow: hidden;
+            border: 1px solid #e9eef3;
+        }
+
+        .category-header {
+            padding: 1.2rem 1.8rem;
+            background: #ffffff;
+            border-bottom: 2px solid #f0f4f9;
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            background: linear-gradient(120deg, #1e293b, #2c3e66);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .category-icon {
+            font-size: 1.8rem;
+        }
+
+        .category-sub {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #3b82f6;
+            background: #eff6ff;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+        }
+
+        .items-wrapper {
+            padding: 1.2rem 1.8rem 1.8rem 1.8rem;
+        }
+
+        .sub-list {
+            margin-bottom: 1.6rem;
+        }
+
+        .sub-heading {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            color: #3b82f6;
+            margin-bottom: 0.8rem;
+            border-left: 3px solid #3b82f6;
+            padding-left: 0.7rem;
+        }
+
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .tech-badge {
+            background: #f8fafc;
+            border-radius: 40px;
+            padding: 0.35rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #0c4a6e;
+            border: 1px solid #e2edff;
+            transition: all 0.1s;
+            font-family: monospace;
+        }
+
+        .tech-badge strong {
+            font-weight: 700;
+            color: #075985;
+        }
+
+        .tech-badge:hover {
+            background: #eef4ff;
+            border-color: #bfdbfe;
+            transform: translateY(-1px);
+        }
+
+        .inline-meta {
+            font-size: 0.75rem;
+            color: #4b5563;
+            margin-top: 0.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .separator-light {
+            height: 1px;
+            background: #eef2f6;
+            margin: 1rem 0;
+        }
+
+        .footer-note {
+            margin-top: 3rem;
+            background: #eef2ff;
+            border-radius: 1.5rem;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #1e293b;
+            border: 1px solid #d9e6ff;
+        }
+        hr {
+            margin: 0.5rem 0;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 1rem;
+            }
+            .category-header {
+                padding: 1rem 1.2rem;
+            }
+            .items-wrapper {
+                padding: 1rem 1.2rem 1.5rem 1.2rem;
+            }
+            .category-title {
+                font-size: 1.3rem;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🧠 Écosystème complet du développement par IA</h1>
+        <p>LLM · Skills · MCP · Agents · Outillage · Mémoire · Évaluation — cartographie 2026</p>
+        <div class="badge-date">📆 Mise à jour — Mai 2026</div>
+    </div>
+
+    <div class="ecosystem-grid">
+        <!-- 1 - FOUNDATION MODELS -->
+        <div class="category-card">
+            <div class="category-header">
+                <span class="category-title">🧠 1. Foundation Models</span>
+                <span class="category-icon">🤖</span>
+            </div>
+            <div class="items-wrapper">
+                <div class="sub-list">
+                    <div class="sub-heading">LLM propriétaires & open source</div>
+                    <div class="badge-container">
+                        <span class="tech-badge">GPT-4.5 / o3</span>
+                        <span class="tech-badge">Gemini 2.0</span>
+                        <span class="tech-badge">Claude 3.5/4</span>
+                        <span class="tech-badge">Grok (xAI)</span>
+                        <span class="tech-badge">Command (Cohere)</span>
+                        <span class="tech-badge">Llama 3/4</span>
+                        <span class="tech-badge">Mistral Large / Mixtral</span>
+                        <span class="tech-badge">Qwen 2.5</span>
+                        <span class="tech-badge">DeepSeek-V3</span>
+                        <span class="tech-badge">Falcon / Phi-3/4</span>
+                    </div>
+                </div>
+                <div class="sub-list">
+                    <div class="sub-heading">Spécialisés code</div>
+                    <div class="badge-container">
+                        <span class="tech-badge">CodeLlama</span>
+                        <span class="tech-badge">StarCoder2</span>
+                        <span class="tech-badge">DeepSeek-Coder</span>
+                        <span class="tech-badge">CodeQwen</span>
+                    </div>
+                </div>
+                <div class="sub-list">
+                    <div class="sub-heading">Multimodaux & légers</div>
+                    <div class="badge-container">
+                        <span class="tech-badge">GPT-4o · Gemini Ultra · Claude Vision</span>
+                        <span class="tech-badge">TinyLlama · Phi-3-mini · Gemma 2</span>
+                        <span class="tech-badge">MobileLLM · LLaVA-Phi</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2 - LLM ENGINEERING & INFRA -->
+        <div class="category-card">
+            <div class="category-header">
+                <span class="category-title">⚙️ 2. LLM Engineering & Infra</span>
+                <span class="category-icon">⚡</span>
+            </div>
+            <div class="items-wrapper">
+                <div class="badge-container"><span class="tech-badge"><strong>Orchestration:</strong> LangChain · LlamaIndex · Haystack · DSPy</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>Inférence:</strong> vLLM · TensorRT-LLM · TGI · llama.cpp · MLX · MLC-LLM</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>Déploiement:</strong> HuggingFace TGI · Replicate · Baseten · Together.ai · Groq</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>Quantification:</strong> GPTQ · AWQ · GGUF · bitsandbytes · QuIP#</span></div>
+            </div>
+        </div>
+
+        <!-- 3 - SKILLS & CAPACITÉS -->
+        <div class="category-card">
+            <div class="category-header">
+                <span class="category-title">🧩 3. Skills / Capacités</span>
+                <span class="category-icon">🎯</span>
+            </div>
+            <div class="items-wrapper">
+                <div class="badge-container"><span class="tech-badge">Chain-of-Thought · Tree-of-Thoughts · ReAct · Reflexion</span></div>
+                <div class="badge-container"><span class="tech-badge">Mémoire vectorielle (RAG) · Mémoire épisodique · Fenêtre contexte longue</span></div>
+                <div class="badge-container"><span class="tech-badge">Tool use / Function calling (OpenAI · Anthropic · Mistral · Gorilla)</span></div>
+                <div class="badge-container"><span class="tech-badge">Text2SQL · Texte → Action · Code interpreter · SWE-agent</span></div>
+                <div class="badge-container"><span class="tech-badge">Devin · AutoCodeRover · OpenDevin · Cursor Composer · Aider</span></div>
+            </div>
+        </div>
+
+        <!-- 4 - MCP (MODEL CONTEXT PROTOCOL) -->
+        <div class="category-card">
+            <div class="category-header">
+                <span class="category-title">🔌 4. MCP (Model Context Protocol)</span>
+                <span class="category-sub">standard émergent</span>
+            </div>
+            <div class="items-wrapper">
+                <div class="badge-container"><span class="tech-badge">MCP Servers (Github, Slack, Notion, Postgres, Gmail)</span></div>
+                <div class="badge-container"><span class="tech-badge">MCP SDK (Python/TS) · mcp-agent · Claude Desktop MCP</span></div>
+                <div class="badge-container"><span class="tech-badge">Continue.dev MCP · LangGraph MCP adapter</span></div>
+                <div class="inline-meta">🌍 Contexte dynamique et sécurisé — remplace partiellement les system prompts</div>
+            </div>
+        </div>
+
+        <!-- 5 - AGENTS (autonomes) -->
+        <div class="category-card">
+            <div class="category-header">
+                <span class="category-title">🤖 5. Agents autonomes</span>
+                <span class="category-icon">🌀</span>
+            </div>
+            <div class="items-wrapper">
+                <div class="sub-list">
+                    <div class="sub-heading">Frameworks agents</div>
+                    <div class="badge-container"><span class="tech-badge">AutoGPT · BabyAGI · SuperAGI · CrewAI · MetaGPT · Camel-AI · OpenAgents</span></div>
+                </div>
+                <div class="sub-list">
+                    <div class="sub-heading">Orchestration multi-agents</div>
+                    <div class="badge-container"><span class="tech-badge">LangGraph · AutoGen (Microsoft) · CrewAI · LlamaDeploy</span></div>
+                </div>
+                <div class="sub-list">
+                    <div class="sub-heading">Agents spécialisés</div>
+                    <div class="badge-container"><span class="tech-badge">Devin · SWE-agent · GPT Engineer · Aider (code)</span></div>
+                    <div class="badge-container"><span class="tech-badge">GPT-Researcher · Storm · PaperQA2 (recherche)</span></div>
+                    <div class="badge-container"><span class="tech-badge">PandasAI · Data Interpreter · WebLlama · BrowserGym · Agent-E</span></div>
+                </div>
+                <div class="badge-container"><span class="tech-badge"><strong>Évaluation agents:</strong> AgentBench · WebArena · SWE-bench · AgentBoard</span></div>
+            </div>
+        </div>
+
+        <!-- 6 - TOOLING & MLOps IA -->
+        <div class="category-card">
+            <div class="category-header">
+                <span class="category-title">🛠️ 6. Tooling & MLOps Spécifique IA</span>
+            </div>
+            <div class="items-wrapper">
+                <div class="badge-container"><span class="tech-badge"><strong>Prompt management:</strong> Langfuse · PromptLayer · Humanloop · LangSmith</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>RAG platforms:</strong> R2R · Quivr · Danswer · RAGFlow · Verba</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>Fine-tuning:</strong> Lamini · Predibase · Unsloth · Axolotl · LitGPT</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>Observabilité / éval:</strong> DeepEval · Ragas · Phoenix Arize · Braintrust · LM Eval Harness</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>LLM Gateways:</strong> LiteLLM · OpenRouter · Portkey · OneAPI</span></div>
+            </div>
+        </div>
+
+        <!-- 7 - MODALITÉS SPÉCIALISÉES (code, voice, vision) -->
+        <div class="category-card">
+            <div class="category-header">
+                <span class="category-title">🧱 7. Modalités spécialisées</span>
+            </div>
+            <div class="items-wrapper">
+                <div class="badge-container"><span class="tech-badge"><strong>IDE & code:</strong> Continue · Cursor · Copilot Workspace · Cline · Cody</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>Voice/Audio:</strong> Whisper · SeamlessM4T · Moshi · SpeechGPT</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>Vision/Video:</strong> SAM2 · DINOv2 · LLaVA · Video-LLaMA</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>Embeddings:</strong> OpenAI ada-003 · Cohere Embed · Voyage · BGE · Jina · GTE</span></div>
+            </div>
+        </div>
+
+        <!-- 8 - MEMORY & KNOWLEDGE LAYER -->
+        <div class="category-card">
+            <div class="category-header">
+                <span class="category-title">🧠 8. Mémoire & Knowledge Layer</span>
+            </div>
+            <div class="items-wrapper">
+                <div class="badge-container"><span class="tech-badge"><strong>Vector DB:</strong> Pinecone · Weaviate · Qdrant · Milvus · Chroma · LanceDB · PGVector</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>Graph RAG:</strong> Neo4j + LangChain · Microsoft GraphRAG · FalkorDB</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>SQL/structuré:</strong> Vanna.ai · SQLCoder · DBT + LLM</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>Mémoire long terme agents:</strong> MemGPT · Zep · Letta · Cognee</span></div>
+            </div>
+        </div>
+
+        <!-- 9 - EVALUATION & SAFETY -->
+        <div class="category-card">
+            <div class="category-header">
+                <span class="category-title">🛡️ 9. Évaluation & Safety</span>
+            </div>
+            <div class="items-wrapper">
+                <div class="badge-container"><span class="tech-badge"><strong>Benchmarks:</strong> MMLU · GSM8K · HumanEval · SWE-bench · HELM · MT-Bench</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>Safety/Alignment:</strong> Constitutional AI · NeMo Guardrails · Llama Guard · OpenAI Moderation</span></div>
+                <div class="badge-container"><span class="tech-badge"><strong>Red teaming:</strong> Garak · PyRIT · PromptInject · Counterfit</span></div>
+            </div>
+        </div>
+
+        <!-- 10 - NO-CODE / LOW-CODE IA -->
+        <div class="category-card">
+            <div class="category-header">
+                <span class="category-title">🧑‍💻 10. Plateformes No-Code / Low-Code IA</span>
+            </div>
+            <div class="items-wrapper">
+                <div class="badge-container"><span class="tech-badge">Flowise · Langflow · Dify · Botpress · Typebot + LLM · VectorShift · MindsDB</span></div>
+            </div>
+        </div>
+
+        <!-- 11 - HARDWARE & ACCÉLÉRATION -->
+        <div class="category-card">
+            <div class="category-header">
+                <span class="category-title">📦 11. Hardware & Accélération</span>
+            </div>
+            <div class="items-wrapper">
+                <div class="badge-container"><span class="tech-badge">NVIDIA H100/B200 · AMD MI300X · Intel Gaudi 3 · Apple M2/M3 Ultra (MLX)</span></div>
+                <div class="badge-container"><span class="tech-badge">Google TPU v5e/v6 · Groq LPU · Cerebras CS-3 · SambaNova SN40L</span></div>
+                <div class="badge-container"><span class="tech-badge">Qualcomm Hexagon · Metax · Inférence quantifiée edge</span></div>
+            </div>
+        </div>
+
+        <!-- 12 - CONCEPTS CLÉS TRANSVERSAUX -->
+        <div class="category-card">
+            <div class="category-header">
+                <span class="category-title">📘 12. Concepts clés & Patterns</span>
+            </div>
+            <div class="items-wrapper">
+                <div class="badge-container"><span class="tech-badge">RAG · ReAct · Chain-of-Thought · Tree-of-Thoughts · Function calling</span></div>
+                <div class="badge-container"><span class="tech-badge">Structured output (JSON mode · Guidance · Outlines)</span></div>
+                <div class="badge-container"><span class="tech-badge">Long context (1M tokens · 200k context) · Prompt injection</span></div>
+                <div class="badge-container"><span class="tech-badge">Semantic caching (GPTCache · Redis + embeddings)</span></div>
+                <div class="badge-container"><span class="tech-badge">Plan-and-Solve · Graph-of-Thoughts · Reflexion</span></div>
+            </div>
+        </div>
+
+        <!-- BONUS : TABLEAU RÉCAPITULATIF (couches) -->
+        <div class="category-card">
+            <div class="category-header">
+                <span class="category-title">📊 Tableau synoptique — Couches</span>
+                <span class="category-icon">🗂️</span>
+            </div>
+            <div class="items-wrapper">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px,1fr)); gap: 0.8rem; font-size: 0.85rem;">
+                    <div><span style="font-weight:700;">Foundation Models</span><br>GPT-4.5, Llama 4, Claude 3.5, Mistral</div>
+                    <div><span style="font-weight:700;">LLM Engineering</span><br>LangChain, vLLM, TGI, llama.cpp</div>
+                    <div><span style="font-weight:700;">Skills</span><br>Tool use, RAG, Code interpreter</div>
+                    <div><span style="font-weight:700;">MCP</span><br>MCP servers, Claude Desktop MCP</div>
+                    <div><span style="font-weight:700;">Agents</span><br>AutoGen, CrewAI, LangGraph, Devin</div>
+                    <div><span style="font-weight:700;">Tooling & Ops</span><br>Langfuse, Ragas, LiteLLM</div>
+                    <div><span style="font-weight:700;">Memory & Retrieval</span><br>Pinecone, MemGPT, GraphRAG</div>
+                    <div><span style="font-weight:700;">Évaluation & Safety</span><br>Garak, LLM Guard, SWE-bench</div>
+                    <div><span style="font-weight:700;">No-Code IA</span><br>Flowise · Dify · Langflow</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        🌟 Écosystème du développement par IA — Modèles, agents, MCP, skills, mémoire et infrastructure.<br>
+        Cette cartographie couvre LLM, frameworks d'orchestration, agents autonomes, protocole MCP, RAG, fine-tuning, évaluation, et hardware.<br>
+        <span style="opacity:0.7;">Mise à jour Mai 2026 — Basé sur l'état de l'art (GPT-4o, Llama 4, Claude 4, Gemini 2.0, MCP, SWE-agent, etc.)</span>
+    </div>
+</div>
+</body>
+</html>
+```
