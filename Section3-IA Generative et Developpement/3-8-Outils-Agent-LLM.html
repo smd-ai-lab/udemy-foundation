@@ -1,0 +1,59 @@
+<h4>🏗️ 1. Frameworks de base &amp; Orchestration</h4>
+
+<p>Ces outils sont le "moteur" de l'agent : ils gèrent la logique de raisonnement, la mémoire, l'enchaînement des étapes et l'appel aux outils. Ce sont les plus complets et les plus utilisés.</p>
+
+<ul><li><p><strong>LangChain </strong>Framework modulaire pour construire des applications avec des LLM. Il offre des abstractions pour les appels de modèles, la gestion du contexte et l'intégration d'outils.Très populaire et flexible. Idéal pour une large gamme d'applications, des simples chaînes aux agents complexes.126k⭐</p></li></ul>
+
+<ul><li><p><strong>LangGraph</strong>Framework pour créer des agents stateful, multi-acteurs sous forme de graphes. Permet de définir des nœuds, des arêtes et un état partagé.Parfait pour les workflows complexes avec des boucles, des branchements et des interventions humaines (human-in-the-loop).23k⭐</p></li></ul>
+
+<ul><li><p><strong>AutoGen</strong> (Microsoft)Framework pour construire des systèmes multi-agents où les agents collaborent via des conversations pour résoudre des tâches.Idéal pour la recherche, la simulation et les workflows complexes nécessitant une collaboration autonome entre agents.53k⭐</p></li><li><p><strong>CrewAI </strong>Framework pour orchestrer des workflows multi-agents basés sur des rôles. On définit des agents avec des rôles, buts et outils spécifiques.Met l'accent sur la collaboration structurée. Très apprécié pour sa simplicité de prise en main.46k⭐</p></li></ul>
+
+<ul><li><p><strong>Semantic Kernel </strong>SDK d'orchestration de Microsoft, conçu pour intégrer l'IA dans des applications existantes (souvent en environnement .NET).Idéal pour les entreprises qui veulent ajouter des capacités d'IA à leurs logiciels sans tout réécrire.27.1k⭐</p></li><li><p><strong>LlamaIndex </strong>Framework orienté "données" pour connecter les LLM à des sources de données structurées et non structurées. Le choix pour les applications de type RAG (Retrieval-Augmented Generation) où l'agent doit interagir avec une base de connaissances.43.2k⭐</p></li><li><p><strong>Agno </strong>Framework léger qui met l'accent sur la composabilité avec des abstractions minimales.Idéal pour les développeurs qui veulent un maximum de contrôle et de flexibilité sans framework trop imposant.</p></li></ul>
+
+<ul><li><p><strong>La Machina Engine </strong>Moteur JavaScript/TypeScript "headless" (sans interface) conçu pour être intégré comme un "cerveau" dans des workflows de production.Idéal pour être embarqué dans des moteurs de workflow comme n8n. Multi-provider, pausable, et conçu pour le cloud (supporte Cloudflare R2).</p></li><li><p><strong>AgentLoom </strong>Orchestrateur de workflows déterministe. Contrairement aux agents autonomes, vous définissez un DAG (graphe orienté acyclique) en YAML que l'LLM suit.Parfait pour les pipelines de production où la prédictibilité, l'observabilité (OpenTelemetry) et le contrôle des coûts (avec circuit breakers) sont prioritaires.</p></li></ul>
+
+<h4>⚙️ 2. Moteurs de Workflow &amp; Exécution</h4>
+
+<p>Si les frameworks d'orchestration définissent la logique, ces outils se concentrent sur l'exécution robuste, la résilience et l'industrialisation des tâches.</p>
+
+<ul><li><p><strong>Temporal </strong>Plateforme open-source pour exécuter des workflows durables, fiables et évolutifs, avec reprise après panne.Idéal pour les processus métier critiques, les tâches de longue durée et les orchestrations complexes qui doivent être résilientes.</p></li><li><p><strong>OpenHands</strong> (ex OpenDevin) Plateforme pour les agents autonomes d'ingénierie logicielle. Capable d'écrire du code, d'exécuter des tests et d'interagir avec un environnement de développement.Référence en matière d'agents de codage autonome.</p></li></ul>
+
+<h4>🎨 3. Plateformes Visuelles &amp; No-Code</h4>
+
+<p>Ces outils permettent de concevoir des workflows d'agents avec une interface graphique (drag-and-drop), sans ou avec très peu de code.</p>
+
+<ul><li><p><strong>Dify </strong>Plateforme open-source pour construire, déployer et opérer des applications LLM et des agents. Combine orchestration, gestion des prompts, évaluation et déploiement.Solution "tout-en-un" pour aller du prototype à la production. Très complet et populaire.144k⭐</p></li><li><p><strong>Flowise </strong>Builder visuel low-code pour créer des workflows LLM et agents avec une interface drag-and-drop.Idéal pour le prototypage rapide, les outils internes et l'éducation.127k⭐</p></li><li><p><strong>Langflow </strong>Interface visuelle pour construire et debugger des applications basées sur LangChain.Excellent pour l'apprentissage, les démos et l'expérimentation de concepts LangChain.44.1k⭐</p></li></ul>
+
+<h4>🧩 4. Harness pour Agents</h4>
+
+<p>Le terme "harness" (ou "harnais") désigne la couche qui transforme un LLM en agent prêt pour la production. Il contient la logique d'orchestration, les outils, les compétences (skills), et la gestion de la mémoire.</p>
+
+<ul><li><p><strong>Deep Agents Deploy</strong> (LangChain)Un harnais open-source, agnostique du modèle, pour déployer des agents de façon scalable. Offre des endpoints prêts à l'emploi (MCP, A2A, memory).Alternative ouverte aux solutions propriétaires comme Claude Managed Agents. Idéal pour qui veut garder la main sur la mémoire et les données.</p></li><li><p><strong>OpenClaw </strong>Harnais open-source à déployer via API. Multi-modèle, MCP-native, et offre une quarantaine de compétences intégrées.Solution flexible qui peut être hébergée sur n'importe quel cloud (ou VPS). Repose sur le framework OpenClaw.</p></li><li><p><strong>Claude Code </strong>exemple populaire de "harnais", utilisant nativement les LLM&nbsp;Anthropic de grande qualité comme Claude-Opus.</p></li><li><p><strong>Hermes Agent</strong> open-source agent framework pour executer des taches en toute autonomie, optimisation de la memoire et fonction auto-evolution.</p></li></ul>
+
+<h4>🔌 5. Intégration &amp; Protocoles</h4>
+
+<p>Pour faire communiquer vos agents entre eux et avec le reste de votre écosystème.</p>
+
+<ul><li><p><strong>Model Context Protocol (MCP) </strong>Protocole unifié pour connecter les LLM à des outils, APIs et sources de données externes.</p></li><li><p><strong>Agent-to-Agent (A2A) </strong>Protocole de messagerie sécurisée et de délégation de tâches entre agents.</p></li></ul>
+
+<h4>💡 Comment faire le bon choix ?</h4>
+
+<p>Le choix dépendra fortement de votre cas d'usage.</p>
+
+<p><br></p>
+
+<p><strong>Vous débutez ou voulez prototyper rapidement ?</strong> Commencez par une plateforme <strong>visuelle comme Dify, Flowise ou Langflow</strong>. Elles sont idéales pour se familiariser avec les concepts sans coder.</p>
+
+<p><br></p>
+
+<p><strong>Vous avez besoin d'un framework robuste et flexible pour coder ?</strong></p>
+
+<ul><li><p><strong>LangChain</strong> est un choix sûr et très populaire pour une large variété de projets.</p></li><li><p>Pour des workflows avec des <strong>interventions humaines</strong>, des <strong>boucles complexes</strong> et une gestion d'état avancée, préférez <strong>LangGraph</strong>.</p></li><li><p>Si votre projet est centré sur la <strong>recherche et la collaboration d'agents multiples</strong>, <strong>AutoGen</strong> est une excellente option.</p></li></ul>
+
+<p><strong>Vous devez industrialiser un processus métier stable et prévisible ?</strong></p>
+
+<ul><li><p>Un outil comme <strong>AgentLoom</strong>, qui fonctionne sur un principe de DAG déterministe, vous offrira un contrôle total sur les coûts et l'exécution.</p></li><li><p><strong>Temporal</strong> apportera une résilience inégalée à vos workflows critiques.</p></li><li><p><strong>Pour une application de RAG ou de recherche documentaire ?</strong> <strong>LlamaIndex</strong> est l'outil le plus spécialisé et performant pour cette tâche.</p></li></ul>
+
+<p><strong>Vous souhaitez déployer un agent "prêt à l'emploi" et exposé via API ?</strong> </p>
+
+<ul><li><p>Les <strong>harnais comme Deep Agents Deploy ou OpenClaw Managed Agents</strong> sont faits pour vous. Ils gèrent l'infrastructure et l'isolation.</p></li></ul>
