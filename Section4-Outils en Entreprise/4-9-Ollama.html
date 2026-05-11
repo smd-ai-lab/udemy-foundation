@@ -1,80 +1,34 @@
 <h4>Demarrage</h4>
 
-<p>Ollama est une plateforme open-source qui permet d'exécuter, de gérer et d'intégrer des modèles de langage de grande
-    taille (LLM) localement sur votre machine. Contrairement aux solutions cloud comme ChatGPT, Ollama fonctionne
-    entièrement en local, garantissant que vos données personnelles et vos conversations ne quittent jamais votre
-    ordinateur. Attention neanmoins certains modeles Ollama ne peuvent etre executés que sur Ollama Cloud&nbsp;(exemple
-    minimax2.7)</p>
+<p>Ollama est une plateforme open-source qui permet d'exécuter, de gérer et d'intégrer des modèles de langage de grande taille (LLM) localement sur votre machine. Contrairement aux solutions cloud comme ChatGPT, Ollama fonctionne entièrement en local, garantissant que vos données personnelles et vos conversations ne quittent jamais votre ordinateur. Attention neanmoins certains modeles Ollama ne peuvent etre executés que sur Ollama Cloud&nbsp;(exemple minimax2.7)</p>
 
-<p>L'outil supporte de nombreux modèles populaires tels que Llama 3.2, Gemma 3, Mistral, Qwen, DeepSeek-R1, et bien
-    d'autres. Il est disponible gratuitement sur les trois principales plateformes : Windows, macOS et Linux. Il existe
-    un abonnement pour les tokens consommés dans Ollama Cloud</p>
+<p>L'outil supporte de nombreux modèles populaires tels que Llama 3.2, Gemma 3, Mistral, Qwen, DeepSeek-R1, et bien d'autres. Il est disponible gratuitement sur les trois principales plateformes : Windows, macOS et Linux. Il existe un abonnement pour les tokens consommés dans Ollama Cloud</p>
 
 <h4>Installation</h4>
 
 <p><strong>Prérequis :</strong></p>
 
-<ul>
-    <li>
-        <p><strong>macOS</strong> : version 11 (Big Sur) ou ultérieure</p>
-    </li>
-    <li>
-        <p><strong>Windows</strong> : Windows 10 ou 11</p>
-    </li>
-    <li>
-        <p><strong>Linux</strong> : distribution récente (2020 ou plus récente)</p>
-    </li>
-    <li>
-        <p><strong>Espace disque</strong> : plusieurs Go sont nécessaires selon les modèles choisis</p>
-    </li>
-</ul>
+<ul><li><p><strong>macOS</strong> : version 11 (Big Sur) ou ultérieure</p></li><li><p><strong>Windows</strong> : Windows 10 ou 11</p></li><li><p><strong>Linux</strong> : distribution récente (2020 ou plus récente)</p></li><li><p><strong>Espace disque</strong> : plusieurs Go sont nécessaires selon les modèles choisis</p></li></ul>
 
 <p><strong>Procédure d'installation :</strong></p>
 
-<ol>
-    <li>
-        <p><strong>Sur macOS et Windows</strong> :</p>
-        <ul>
-            <li>
-                <p>Téléchargez le fichier d'installation depuis le site officiel d'Ollama</p>
-            </li>
-            <li>
-                <p>Lancez l'installateur et suivez les instructions à l'écran</p>
-            </li>
-            <li>
-                <p>Sur macOS, déplacez l'application dans le dossier Applications</p>
-            </li>
-        </ul>
-    </li>
-    <li>
-        <p><strong>Sur Linux</strong> :</p>
-        <p>bash</p>
-        <pre class="prettyprint linenums">curl -fsSL https://ollama.com/install.sh | sh</pre>
-        <p>L'installation se fait entièrement en ligne de commande.</p>
-    </li>
-    <li>
-        <p><strong>Via Docker</strong> (toutes plateformes) :</p>
-        <p>yaml</p>
-        <pre class="prettyprint linenums">services:
+<ol><li><p><strong>Sur macOS et Windows</strong> :</p><ul><li><p>Téléchargez le fichier d'installation depuis le site officiel d'Ollama</p></li><li><p>Lancez l'installateur et suivez les instructions à l'écran</p></li><li><p>Sur macOS, déplacez l'application dans le dossier Applications</p></li></ul></li><li><p><strong>Sur Linux</strong> :</p><p>bash</p><pre class="prettyprint linenums">curl -fsSL https://ollama.com/install.sh | sh</pre><p>L'installation se fait entièrement en ligne de commande.</p></li><li><p><strong>Via Docker</strong> (toutes plateformes) :</p><p>yaml</p><pre class="prettyprint linenums">services:
 
-  ollama:
+&nbsp; ollama:
 
-    image: ollama/ollama:latest
+&nbsp; &nbsp; image: ollama/ollama:latest
 
-    container_name: ollama
+&nbsp; &nbsp; container_name: ollama
 
-    ports:
+&nbsp; &nbsp; ports:
 
-      - "11434:11434"
+&nbsp; &nbsp; &nbsp; - "11434:11434"
 
-    volumes:
+&nbsp; &nbsp; volumes:
 
-      - ./ollama:/root/.ollama
+&nbsp; &nbsp; &nbsp; - ./ollama:/root/.ollama
 
-    restart: unless-stopped</pre>
-        <p>Cette méthode est particulièrement utile pour les déploiements sur serveur ou NAS.</p>
-    </li>
-</ol>
+&nbsp; &nbsp; restart: unless-stopped</pre><p>Cette méthode est particulièrement utile pour les déploiements sur serveur ou NAS.</p></li></ol>
 
 <p><strong>Premier démarrage :</strong><br>Après installation, téléchargez votre premier modèle :</p>
 
@@ -104,13 +58,11 @@ print(models)</pre>
 
 <h4>Capabilities</h4>
 
-<p>Ollama offre un large éventail de fonctionnalités avancées qui le rendent adapté aussi bien au développement local
-    qu'à l'intégration professionnelle.</p>
+<p>Ollama offre un large éventail de fonctionnalités avancées qui le rendent adapté aussi bien au développement local qu'à l'intégration professionnelle.</p>
 
 <h4>Streaming</h4>
 
-<p>Le streaming permet de recevoir les réponses token par token, offrant une expérience fluide et réactive, semblable
-    aux chatbots cloud.</p>
+<p>Le streaming permet de recevoir les réponses token par token, offrant une expérience fluide et réactive, semblable aux chatbots cloud.</p>
 
 <p>python</p>
 
@@ -120,24 +72,23 @@ print(models)</pre>
 
 stream = ollama.chat(
 
-    model='granite4.1:3b',
+&nbsp; &nbsp; model='granite4.1:3b',
 
-    messages=[{'role': 'user', 'content': 'Raconte-moi une histoire courte sur un chat.'}],
+&nbsp; &nbsp; messages=[{'role': 'user', 'content': 'Raconte-moi une histoire courte sur un chat.'}],
 
-    stream=True
+&nbsp; &nbsp; stream=True
 
 )
 
 for chunk in stream:
 
-    print(chunk['message']['content'], end='', flush=True)</pre>
+&nbsp; &nbsp; print(chunk['message']['content'], end='', flush=True)</pre>
 
 <p>Cette approche est essentielle pour les applications nécessitant une interaction en temps réel.</p>
 
 <h4>Thinking</h4>
 
-<p>Certains modèles comme DeepSeek-R1 supportent une phase de "réflexion" interne avant de produire leur réponse finale.
-    Cette fonctionnalité aide à résoudre des problèmes complexes en décomposant le raisonnement.</p>
+<p>Certains modèles comme DeepSeek-R1 supportent une phase de "réflexion" interne avant de produire leur réponse finale. Cette fonctionnalité aide à résoudre des problèmes complexes en décomposant le raisonnement.</p>
 
 <p>python</p>
 
@@ -147,11 +98,11 @@ for chunk in stream:
 
 response = ollama.chat(
 
-    model='deepseek-r1:1.5b',
+&nbsp; &nbsp; model='deepseek-r1:1.5b',
 
-    messages=[{'role': 'user', 'content': 'Résous ce problème étape par étape : 24 * 17'}],
+&nbsp; &nbsp; messages=[{'role': 'user', 'content': 'Résous ce problème étape par étape : 24 * 17'}],
 
-    options={'num_ctx': 4096}  # Contexte suffisant pour le raisonnement
+&nbsp; &nbsp; options={'num_ctx': 4096}&nbsp; # Contexte suffisant pour le raisonnement
 
 )
 
@@ -159,8 +110,7 @@ print(response['message']['content'])</pre>
 
 <h4>Structured Outputs</h4>
 
-<p>Les sorties structurées permettent de contraindre le modèle à générer des réponses au format JSON selon un schéma
-    prédéfini. Cela facilite l'intégration avec d'autres systèmes et le traitement automatisé.</p>
+<p>Les sorties structurées permettent de contraindre le modèle à générer des réponses au format JSON selon un schéma prédéfini. Cela facilite l'intégration avec d'autres systèmes et le traitement automatisé.</p>
 
 <p>python</p>
 
@@ -174,23 +124,23 @@ from typing import List
 
 class Personnage(BaseModel):
 
-    name: str
+&nbsp; &nbsp; name: str
 
-    age: int
+&nbsp; &nbsp; age: int
 
-    skills: List[str]
+&nbsp; &nbsp; skills: List[str]
 
-    city: str
+&nbsp; &nbsp; city: str
 
 # Forcer le modèle à suivre cette structure
 
 response = ollama.chat(
 
-    model='deepseek-r1:1.5b',
+&nbsp; &nbsp; model='deepseek-r1:1.5b',
 
-    messages=[{'role': 'user', 'content': 'Crée un personnage pour un jeu vidéo.'}],
+&nbsp; &nbsp; messages=[{'role': 'user', 'content': 'Crée un personnage pour un jeu vidéo.'}],
 
-    format=Personnage.model_json_schema(),  # Format JSON contraint
+&nbsp; &nbsp; format=Personnage.model_json_schema(),&nbsp; # Format JSON contraint
 
 )
 
@@ -200,8 +150,7 @@ print(f"Nom: {personnage.name}, Âge: {personnage.age}")
 
 print(f"Compétences: {', '.join(personnage.skills)}")</pre>
 
-<p>Cette fonctionnalité est particulièrement utile pour l'extraction de données et la construction d'agents IA fiables.
-</p>
+<p>Cette fonctionnalité est particulièrement utile pour l'extraction de données et la construction d'agents IA fiables.</p>
 
 <h4>Vision</h4>
 
@@ -221,23 +170,23 @@ image_path = 'photo.jpg'
 
 with open(image_path, 'rb') as img_file:
 
-    image_base64 = base64.b64encode(img_file.read()).decode('utf-8')
+&nbsp; &nbsp; image_base64 = base64.b64encode(img_file.read()).decode('utf-8')
 
 # Analyser l'image
 
 response = ollama.chat(
 
-    model='gemma3:27b-cloud',
+&nbsp; &nbsp; model='gemma3:27b-cloud',
 
-    messages=[{
+&nbsp; &nbsp; messages=[{
 
-        'role': 'user',
+&nbsp; &nbsp; &nbsp; &nbsp; 'role': 'user',
 
-        'content': 'Décris ce que tu vois sur cette image.',
+&nbsp; &nbsp; &nbsp; &nbsp; 'content': 'Décris ce que tu vois sur cette image.',
 
-        'images': [image_base64]
+&nbsp; &nbsp; &nbsp; &nbsp; 'images': [image_base64]
 
-    }]
+&nbsp; &nbsp; }]
 
 )
 
@@ -245,14 +194,11 @@ print(response['message']['content'])</pre>
 
 <h4>Embeddings</h4>
 
-<p>Les embeddings sont des représentations vectorielles du texte qui capturent le sens sémantique. Ils sont essentiels
-    pour construire des systèmes de recherche, de recommandation ou de RAG (Retrieval-Augmented Generation).</p>
+<p>Les embeddings sont des représentations vectorielles du texte qui capturent le sens sémantique. Ils sont essentiels pour construire des systèmes de recherche, de recommandation ou de RAG (Retrieval-Augmented Generation).</p>
 
 <p>python</p>
 
-<pre class="prettyprint linenums">import ollama
-
-# Générer des embeddings pour une ou plusieurs phrases
+<pre class="prettyprint linenums"># Générer des embeddings pour une ou plusieurs phrases
 
 response = ollama.embed(
 
@@ -280,26 +226,11 @@ for i, embedding in enumerate(response['embeddings']):
 
 <p><strong>Applications pratiques :</strong></p>
 
-<ul>
-    <li>
-        <p>Recherche sémantique : trouver des documents similaires par le sens, pas par mots-clés</p>
-    </li>
-    <li>
-        <p>Clustering : regrouper automatiquement des textes par thème</p>
-    </li>
-    <li>
-        <p>Classification : catégoriser des commentaires ou des emails</p>
-    </li>
-    <li>
-        <p>RAG : enrichir les réponses du LLM avec votre base de connaissances personnelle</p>
-    </li>
-</ul>
+<ul><li><p>Recherche sémantique : trouver des documents similaires par le sens, pas par mots-clés</p></li><li><p>Clustering : regrouper automatiquement des textes par thème</p></li><li><p>Classification : catégoriser des commentaires ou des emails</p></li><li><p>RAG : enrichir les réponses du LLM avec votre base de connaissances personnelle</p></li><li><p>L'embeddings est souvent necessaire lorsque les documents sont nombreux et volumineux, la strategie etant d'appeler uniquement ce qui est sémantiquement interessant avant de le pousser dans le contexte</p></li></ul>
 
 <h4>Tool calling</h4>
 
-<p>Le tool calling (ou function calling) permet au modèle d'identifier quand il a besoin d'exécuter une fonction externe
-    et de formater automatiquement l'appel approprié. C'est fondamental pour créer des agents IA capables d'interagir
-    avec le monde extérieur.</p>
+<p>Le tool calling (ou function calling) permet au modèle d'identifier quand il a besoin d'exécuter une fonction externe et de formater automatiquement l'appel approprié. C'est fondamental pour créer des agents IA capables d'interagir avec le monde extérieur.</p>
 
 <p>python</p>
 
@@ -369,7 +300,7 @@ tools = [{
 
 response = ollama.chat(
 
-    model='qwen3',
+    model='granite4.1:3b',
 
     messages=[{'role': 'user', 'content': "Quel temps fait-il à Paris ?"}],
 
@@ -385,9 +316,13 @@ if response['message'].get('tool_calls'):
 
         if tool_call['function']['name'] == 'get_temperature':
 
-            # Extraire les arguments
+            # Extraire les arguments (déjà un dict, pas une string JSON)
 
-            args = json.loads(tool_call['function']['arguments'])
+            args = tool_call['function']['arguments']
+
+            if isinstance(args, str):
+
+                args = json.loads(args)
 
             city = args['city']
 
@@ -403,22 +338,11 @@ if response['message'].get('tool_calls'):
 
 <h4>Web search</h4>
 
-<p>Ollama supporte la recherche web en temps réel via son API cloud. Cette fonctionnalité permet au modèle d'accéder à
-    des informations actualisées au-delà de ses données d'entraînement.</p>
+<p>Ollama supporte la recherche web en temps réel via son API cloud. Cette fonctionnalité permet au modèle d'accéder à des informations actualisées au-delà de ses données d'entraînement.</p>
 
 <p><strong>Configuration préalable :</strong></p>
 
-<ol>
-    <li>
-        <p>Créez un compte sur <a href="https://ollama.com" target="_blank" rel="noopener noreferrer">ollama.com</a></p>
-    </li>
-    <li>
-        <p>Générez une clé API dans les paramètres</p>
-    </li>
-    <li>
-        <p>Exportez la clé dans votre environnement :</p>
-    </li>
-</ol>
+<ol><li><p>Créez un compte sur <a href="https://ollama.com" target="_blank" rel="noopener noreferrer">ollama.com</a></p></li><li><p>Générez une clé API dans les paramètres</p></li><li><p>Exportez la clé dans votre environnement :</p></li></ol>
 
 <p>bash</p>
 
@@ -452,43 +376,27 @@ print(results)</pre>
 
 response = ollama.chat(
 
-    model='qwen3',
+&nbsp; &nbsp; model='qwen3',
 
-    messages=[{'role': 'user', 'content': "Quelles sont les dernières fonctionnalités d'Ollama ?"}],
+&nbsp; &nbsp; messages=[{'role': 'user', 'content': "Quelles sont les dernières fonctionnalités d'Ollama ?"}],
 
-    tools=['web_search', 'web_fetch'],  # Recherche et extraction de contenu
+&nbsp; &nbsp; tools=['web_search', 'web_fetch'],&nbsp; # Recherche et extraction de contenu
 
 )
 
 print(response['message']['content'])</pre>
 
-<p>Cette fonctionnalité est particulièrement utile pour créer des agents capables de répondre à des questions sur
-    l'actualité ou des informations spécifiques non présentes dans le modèle.</p>
+<p>Cette fonctionnalité est particulièrement utile pour créer des agents capables de répondre à des questions sur l'actualité ou des informations spécifiques non présentes dans le modèle.</p>
 
 <h4>*Integrations</h4>
 
-<p>L'un des points forts d'Ollama est son écosystème riche d'intégrations. La plateforme peut s'interfacer avec de
-    nombreux outils de développement et IDE.</p>
+<p>L'un des points forts d'Ollama est son écosystème riche d'intégrations. La plateforme peut s'interfacer avec de nombreux outils de développement et IDE.</p>
 
 <h4>Overview</h4>
 
-<p>Ollama s'intègre nativement avec plus d'une douzaine d'agents et d'outils de développement. Voici un aperçu des
-    principales intégrations disponibles :</p>
+<p>Ollama s'intègre nativement avec plus d'une douzaine d'agents et d'outils de développement. Voici un aperçu des principales intégrations disponibles :</p>
 
-<p>IntégrationTypeDescription<strong>OpenClaw</strong>Agent IAPlateforme complète avec support natif d'Ollama pour
-    l'automatisation<strong>Hermes Agent</strong>Agent IAAgent léger pour développement local, compatible Windows,
-    macOS, Linux<strong>Claude Code</strong>Assistant codageAgent de programmation d'Anthropic compatible avec
-    Ollama<strong>Codex</strong>Assistant codageAssistant de programmation open-source<strong>Copilot
-        CLI</strong>Assistant terminalExtension de GitHub pour la ligne de commande<strong>OpenCode</strong>Assistant
-    codageAgent de développement flexible avec support Ollama<strong>Droid</strong>Assistant codageAgent Factory Droid
-    pour l'automatisation des tâches de code<strong>Goose</strong>Agent généralAgent polyvalent pour diverses
-    tâches<strong>Pi</strong>Assistant conversationnelAgent de discussion avec support
-    Ollama<strong>Pool</strong>OrchestrationGestionnaire de ressources et de modèles<strong>Cline</strong>Extension VS
-    CodeAgent de codage intégré à Visual Studio Code<strong>JetBrains</strong>IDEIntégration native dans les IDE
-    JetBrains (IntelliJ, PyCharm, etc.)<strong>Roo Code</strong>Assistant codageAlternative légère pour le
-    développement<strong>VS Code</strong>IDEExtension officielle pour Visual Studio Code<strong>Xcode</strong>IDESupport
-    pour le développement Apple (iOS/macOS)<strong>Zed</strong>ÉditeurÉditeur de code haute performance avec intégration
-    Ollama</p>
+<p>IntégrationTypeDescription<strong>OpenClaw</strong>Agent IAPlateforme complète avec support natif d'Ollama pour l'automatisation<strong>Hermes Agent</strong>Agent IAAgent léger pour développement local, compatible Windows, macOS, Linux<strong>Claude Code</strong>Assistant codageAgent de programmation d'Anthropic compatible avec Ollama<strong>Codex</strong>Assistant codageAssistant de programmation open-source<strong>Copilot CLI</strong>Assistant terminalExtension de GitHub pour la ligne de commande<strong>OpenCode</strong>Assistant codageAgent de développement flexible avec support Ollama<strong>Droid</strong>Assistant codageAgent Factory Droid pour l'automatisation des tâches de code<strong>Goose</strong>Agent généralAgent polyvalent pour diverses tâches<strong>Pi</strong>Assistant conversationnelAgent de discussion avec support Ollama<strong>Pool</strong>OrchestrationGestionnaire de ressources et de modèles<strong>Cline</strong>Extension VS CodeAgent de codage intégré à Visual Studio Code<strong>JetBrains</strong>IDEIntégration native dans les IDE JetBrains (IntelliJ, PyCharm, etc.)<strong>Roo Code</strong>Assistant codageAlternative légère pour le développement<strong>VS Code</strong>IDEExtension officielle pour Visual Studio Code<strong>Xcode</strong>IDESupport pour le développement Apple (iOS/macOS)<strong>Zed</strong>ÉditeurÉditeur de code haute performance avec intégration Ollama</p>
 
 <p><strong>Lancement d'un agent avec Ollama :</strong></p>
 
@@ -506,8 +414,7 @@ ollama launch claude --model reecdev/tiny-oss
 
 ollama launch hermes --model qwen3</pre>
 
-<p>Pour le développement Python, vous pouvez également intégrer Ollama dans vos propres applications via l'API REST ou
-    la bibliothèque Python officielle, comme illustré dans les sections précédentes.</p>
+<p>Pour le développement Python, vous pouvez également intégrer Ollama dans vos propres applications via l'API REST ou la bibliothèque Python officielle, comme illustré dans les sections précédentes.</p>
 
 <h4>*More information</h4>
 
@@ -515,37 +422,15 @@ ollama launch hermes --model qwen3</pre>
 
 <p>Ollama expose une interface en ligne de commande intuitive. Voici les commandes essentielles :</p>
 
-<p>CommandeDescriptionExemple<code>ollama run &lt;model&gt;</code>Lancer un modèle (le télécharge si
-    absent)<code>ollama run llama3.2ollama pull &lt;model&gt;</code>Télécharger un modèle sans
-    l'exécuter<code>ollama pull mistralollama list</code>Lister les modèles
-    téléchargés<code>ollama listollama rm &lt;model&gt;</code>Supprimer un
-    modèle<code>ollama rm llama3.2:7bollama ps</code>Voir les modèles en cours
-    d'exécution<code>ollama psollama stop &lt;model&gt;</code>Arrêter un modèle en
-    cours<code>ollama stop llama3.2ollama cp &lt;source&gt; &lt;dest&gt;</code>Copier un
-    modèle<code>ollama cp llama3.2 my-modelollama create &lt;name&gt; -f &lt;file&gt;</code>Créer un modèle
-    personnalisé<code>ollama create mymodel -f Modelfile</code></p>
+<p>CommandeDescriptionExemple<code>ollama run &lt;model&gt;</code>Lancer un modèle (le télécharge si absent)<code>ollama run llama3.2ollama pull &lt;model&gt;</code>Télécharger un modèle sans l'exécuter<code>ollama pull mistralollama list</code>Lister les modèles téléchargés<code>ollama listollama rm &lt;model&gt;</code>Supprimer un modèle<code>ollama rm llama3.2:7bollama ps</code>Voir les modèles en cours d'exécution<code>ollama psollama stop &lt;model&gt;</code>Arrêter un modèle en cours<code>ollama stop llama3.2ollama cp &lt;source&gt; &lt;dest&gt;</code>Copier un modèle<code>ollama cp llama3.2 my-modelollama create &lt;name&gt; -f &lt;file&gt;</code>Créer un modèle personnalisé<code>ollama create mymodel -f Modelfile</code></p>
 
 <p><strong>En session interactive (</strong><code><strong>ollama run</strong></code><strong>) :</strong></p>
 
-<ul>
-    <li>
-        <p><code>/bye</code> - Quitter la session</p>
-    </li>
-    <li>
-        <p><code>/?</code> - Aide</p>
-    </li>
-    <li>
-        <p><code>/clear</code> - Effacer le contexte</p>
-    </li>
-    <li>
-        <p><code>/save</code> - Sauvegarder le modèle modifié</p>
-    </li>
-</ul>
+<ul><li><p><code>/bye</code> - Quitter la session</p></li><li><p><code>/?</code> - Aide</p></li><li><p><code>/clear</code> - Effacer le contexte</p></li><li><p><code>/save</code> - Sauvegarder le modèle modifié</p></li></ul>
 
 <h4>Modelfile Reference</h4>
 
-<p>Le Modelfile permet de créer des modèles personnalisés en configurant les paramètres par défaut, les instructions
-    système, et les modèles de base.</p>
+<p>Le Modelfile permet de créer des modèles personnalisés en configurant les paramètres par défaut, les instructions système, et les modèles de base.</p>
 
 <p>dockerfile</p>
 
@@ -595,27 +480,15 @@ ollama run mon-assistant</pre>
 
 <h4>Context length</h4>
 
-<p>La longueur de contexte détermine combien de tokens (mots ou sous-mots) le modèle peut "mémoriser" à la fois. C'est
-    un paramètre crucial qui impacte directement l'utilisation mémoire et les performances.</p>
+<p>La longueur de contexte détermine combien de tokens (mots ou sous-mots) le modèle peut "mémoriser" à la fois. C'est un paramètre crucial qui impacte directement l'utilisation mémoire et les performances.</p>
 
 <p><strong>Valeurs par défaut selon la VRAM (à partir de la version 0.15.5)</strong> :</p>
 
-<ul>
-    <li>
-        <p><strong>Moins de 24 Go VRAM</strong> : 4 096 tokens</p>
-    </li>
-    <li>
-        <p><strong>24-48 Go VRAM</strong> : 32 768 tokens</p>
-    </li>
-    <li>
-        <p><strong>48+ Go VRAM</strong> : 262 144 tokens</p>
-    </li>
-</ul>
+<ul><li><p><strong>Moins de 24 Go VRAM</strong> : 4 096 tokens</p></li><li><p><strong>24-48 Go VRAM</strong> : 32 768 tokens</p></li><li><p><strong>48+ Go VRAM</strong> : 262 144 tokens</p></li></ul>
 
 <p><strong>Capacités natives des modèles</strong> :</p>
 
-<p>ModèleContexte natifExtensible jusqu'àLlama 24 0968 192<strong>Llama 38 19216 000+</strong>Mistral32 76832 768Gemma8
-    1928 192Qwen32 76832 768DeepSeek-V3128 000128 000</p>
+<p>ModèleContexte natifExtensible jusqu'àLlama 24 0968 192<strong>Llama 38 19216 000+</strong>Mistral32 76832 768Gemma8 1928 192Qwen32 76832 768DeepSeek-V3128 000128 000</p>
 
 <p><strong>Configuration du contexte :</strong></p>
 
@@ -633,15 +506,15 @@ import ollama
 
 response = ollama.chat(
 
-    model='llama3.2',
+&nbsp; &nbsp; model='llama3.2',
 
-    messages=[{'role': 'user', 'content': 'Long texte...'}],
+&nbsp; &nbsp; messages=[{'role': 'user', 'content': 'Long texte...'}],
 
-    options={
+&nbsp; &nbsp; options={
 
-        'num_ctx': 16384  # 16k tokens de contexte
+&nbsp; &nbsp; &nbsp; &nbsp; 'num_ctx': 16384&nbsp; # 16k tokens de contexte
 
-    }
+&nbsp; &nbsp; }
 
 )</pre>
 
@@ -659,14 +532,7 @@ PARAMETER num_ctx 16384</pre>
 
 <p>Par exemple, pour Llama 3 8B avec 32 couches et une dimension de 4096 :</p>
 
-<ul>
-    <li>
-        <p>À 4k contexte : ~2 Go de VRAM supplémentaire</p>
-    </li>
-    <li>
-        <p>À 16k contexte : ~8 Go de VRAM supplémentaire</p>
-    </li>
-</ul>
+<ul><li><p>À 4k contexte : ~2 Go de VRAM supplémentaire</p></li><li><p>À 16k contexte : ~8 Go de VRAM supplémentaire</p></li></ul>
 
 <h4>Hardware support</h4>
 
@@ -674,42 +540,15 @@ PARAMETER num_ctx 16384</pre>
 
 <p><strong>Processeurs (CPU)</strong> :</p>
 
-<ul>
-    <li>
-        <p>Support natif sur macOS (Metal), Windows et Linux</p>
-    </li>
-    <li>
-        <p>Fonctionne sur CPU uniquement (plus lent mais accessible)</p>
-    </li>
-</ul>
+<ul><li><p>Support natif sur macOS (Metal), Windows et Linux</p></li><li><p>Fonctionne sur CPU uniquement (plus lent mais accessible)</p></li></ul>
 
 <p><strong>Cartes graphiques (GPU)</strong> :</p>
 
-<ul>
-    <li>
-        <p><strong>NVIDIA</strong> : Support CUDA pour accélération matérielle</p>
-    </li>
-    <li>
-        <p><strong>AMD</strong> : Support ROCm (configuration spécifique possible via Docker)</p>
-    </li>
-    <li>
-        <p><strong>Apple Silicon</strong> : Support Metal pour les Mac M1/M2/M3</p>
-    </li>
-</ul>
+<ul><li><p><strong>NVIDIA</strong> : Support CUDA pour accélération matérielle</p></li><li><p><strong>AMD</strong> : Support ROCm (configuration spécifique possible via Docker)</p></li><li><p><strong>Apple Silicon</strong> : Support Metal pour les Mac M1/M2/M3</p></li></ul>
 
 <p><strong>Mémoire recommandée</strong> :</p>
 
-<ul>
-    <li>
-        <p>Modèles 3B (comme TinyOSS) : 4 Go RAM minimum</p>
-    </li>
-    <li>
-        <p>Modèles 7B-8B (Llama 3, Mistral) : 8-16 Go RAM recommandés</p>
-    </li>
-    <li>
-        <p>Modèles 70B+ : 32-64 Go RAM + GPU dédié</p>
-    </li>
-</ul>
+<ul><li><p>Modèles 3B (comme TinyOSS) : 4 Go RAM minimum</p></li><li><p>Modèles 7B-8B (Llama 3, Mistral) : 8-16 Go RAM recommandés</p></li><li><p>Modèles 70B+ : 32-64 Go RAM + GPU dédié</p></li></ul>
 
 <p><strong>Configuration Docker avancée pour AMD</strong> :</p>
 
@@ -717,44 +556,36 @@ PARAMETER num_ctx 16384</pre>
 
 <pre class="prettyprint linenums">services:
 
-  ollama:
+&nbsp; ollama:
 
-    image: ollama/ollama:rocm  # Version optimisée AMD
+&nbsp; &nbsp; image: ollama/ollama:rocm&nbsp; # Version optimisée AMD
 
-    container_name: ollama
+&nbsp; &nbsp; container_name: ollama
 
-    ports:
+&nbsp; &nbsp; ports:
 
-      - "11434:11434"
+&nbsp; &nbsp; &nbsp; - "11434:11434"
 
-    volumes:
+&nbsp; &nbsp; volumes:
 
-      - ./ollama:/root/.ollama
+&nbsp; &nbsp; &nbsp; - ./ollama:/root/.ollama
 
-    environment:
+&nbsp; &nbsp; environment:
 
-      - OLLAMA_NUM_PARALLEL=2      # Requêtes parallèles
+&nbsp; &nbsp; &nbsp; - OLLAMA_NUM_PARALLEL=2&nbsp; &nbsp; &nbsp; # Requêtes parallèles
 
-      - OLLAMA_MAX_LOADED_MODELS=1 # Modèles simultanés
+&nbsp; &nbsp; &nbsp; - OLLAMA_MAX_LOADED_MODELS=1 # Modèles simultanés
 
-    devices:
+&nbsp; &nbsp; devices:
 
-      - /dev/kfd
+&nbsp; &nbsp; &nbsp; - /dev/kfd
 
-      - /dev/dri
+&nbsp; &nbsp; &nbsp; - /dev/dri
 
-    restart: unless-stopped</pre>
+&nbsp; &nbsp; restart: unless-stopped</pre>
 
 <p><strong>Optimisations possibles</strong> :</p>
 
-<ul>
-    <li>
-        <p><code>OLLAMA_NUM_PARALLEL</code> : Nombre de requêtes traitées en parallèle</p>
-    </li>
-    <li>
-        <p><code>OLLAMA_MAX_LOADED_MODELS</code> : Nombre de modèles maintenus en mémoire</p>
-    </li>
-    <li>
-        <p><code>OLLAMA_GPU_OVERHEAD</code> : Marge mémoire pour les opérations GPU</p>
-    </li>
-</ul>
+<ul><li><p><code>OLLAMA_NUM_PARALLEL</code> : Nombre de requêtes traitées en parallèle</p></li><li><p><code>OLLAMA_MAX_LOADED_MODELS</code> : Nombre de modèles maintenus en mémoire</p></li><li><p><code>OLLAMA_GPU_OVERHEAD</code> : Marge mémoire pour les opérations GPU</p></li></ul>
+
+<p><br></p>
