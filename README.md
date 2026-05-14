@@ -7,19 +7,30 @@
 
 ```bash
 # windows
-git config --global core.sshCommand "ssh -i /c/Users/steph/.ssh/smd/id_rsa"
+git config --local core.sshCommand "ssh -i /c/Users/steph/.ssh/smd/id_rsa"
 
 # mac / linux
-git config --global core.sshCommand "ssh -i ~/.ssh/smd/id_rsa"
+git config --local core.sshCommand "ssh -i ~/.ssh/smd/id_rsa"
 ```
 
 ### Micromamba
 ```bash
 micromamba activate
 micromamba shell init
-micromamba create -n ollama-foundation python=3.13
-micromamba activate ollama-foundation
+micromamba create -n udemy-foundation python=3.13
+micromamba activate udemy-foundation
 pip install -r requirements.txt
+```
+
+### Node
+```bash
+nodeenv env
+. env/bin/activate
+```
+
+### Openspec
+```bash
+npm install @fission-ai/openspec@latest
 ```
 
 ### Ollama

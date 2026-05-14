@@ -18,3 +18,5 @@ dist/
 build/
 *.egg
 .note*
+env/
+node_modules/
