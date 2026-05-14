@@ -1,0 +1,4 @@
+ollama
+pillow
+langchain-ollama
+langchain
