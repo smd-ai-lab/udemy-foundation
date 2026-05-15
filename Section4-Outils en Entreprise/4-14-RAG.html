@@ -1,0 +1,49 @@
+<h4>RAG (Retrieval-Augmented Generation)</h4>
+
+<p>Est une technique qui permet à une intelligence artificielle de consulter des documents externes pour enrichir ses connaissances avant de vous répondre.</p>
+
+<p>L'IA peut aller chercher les informations dans vos propres documents privés (manuels, bases de données, etc.) pour vous donner une réponse précise et éviter d'inventer des choses (hallucinations).</p>
+
+<h4>Comment fonctionne le RAG</h4>
+
+<p><strong>Je fais un prompt</strong> demandant des informations précisessur des documents d'entreprise.</p>
+
+<ol><li><p><strong>Des documents sont téléchargés</strong> contenant ces informations. <em>[indexation] </em>✅</p></li><li><p><strong>Avant tout, il y a </strong></p><ul><li><p><strong>Chunking</strong> (découpage en morceaux cohérents) <em>[indexation]</em> ✅</p></li><li><p>On transforme <strong>les chunks</strong> (texte) en <strong>vecteurs (embeddings)</strong>. <em>[indexation] </em>✅<br>Les tokens sont une étape intermédiaire interne au LLM, pas utilisée directement pour la recherche vectorielle.</p></li></ul></li><li><p><strong>Les vecteurs (pas les tokens ni les chunks bruts)</strong> sont stockés dans une <strong>base vectorielle</strong>, avec une référence au texte original (le chunk copié dans la base et les informations du fichiers...) <em>[indexation] </em> ✅</p></li><li><p><strong>Le prompt est aussi transformé en vecteur</strong> (pas en tokens pour la recherche).&nbsp; <em>[recuperation]</em> ✅</p></li><li><p><strong>Recherche sémantique</strong> entre le <strong>vecteur du prompt</strong> et les <strong>vecteurs des chunks</strong> dans la base. <em>[recuperation]</em> ✅</p></li><li><p><strong>Re-ranking et filtrage</strong> sur les chunks retournés – possible, mais facultatif. <em>[recuperation]</em> ✅</p></li><li><p><strong>Les chunks sélectionnés (leur texte original) sont insérés dans la fenêtre de contexte</strong> du LLM. <em>[generation]</em>&nbsp; ✅</p></li><li><p><strong>Envoi au LLM</strong> (prompt utilisateur + contexte récupéré) → génération de la réponse. <em>[generation]</em>&nbsp; ✅</p></li></ol>
+
+<h4>Les 3 étapes du RAG</h4>
+
+<p><strong>Indexation</strong> : découpage → vectorisation → stockage (vecteurs + textes)</p>
+
+<p><strong>Récupération</strong> : vectorisation du prompt → recherche sémantique</p>
+
+<p><strong>Génération</strong> : injection des chunks → LLM → réponse</p>
+
+<p>Pour bien comprendre, en détail voici les 3 étapes du RAG:</p>
+
+<h4>1. Indexation (préparer les documents)</h4>
+
+<ul><li><p><strong>Chunking</strong> : découper les documents en petits morceaux (paragraphes, pages, sections). La qualité du RAG en dépend.</p></li><li><p><strong>Embedding</strong> : transformer chaque chunk en <strong>vecteur</strong> (représentation mathématique du sens).</p></li><li><p><strong>Stockage</strong> (double) :</p><ul><li><p><strong>Vectorstore</strong> : stocke les vecteurs pour la recherche sémantique.</p></li><li><p><strong>Docstore</strong> : stocke les textes bruts des chunks + métadonnées (source, page, etc.).</p></li></ul></li></ul>
+
+<blockquote><p><em>Le stockage peut être fait dans différents types de bases : Vector DB, SQL, Graph DB.</em></p></blockquote>
+
+<h4>2. Récupération (trouver les bonnes infos)</h4>
+
+<ul><li><p>Le <strong>prompt utilisateur</strong> est transformé en vecteur.</p></li><li><p>Une <strong>recherche sémantique</strong> est effectuée entre le vecteur du prompt et les vecteurs du Vectorstore.</p></li><li><p>Les <strong>chunks les plus pertinents</strong> sont récupérés depuis le Docstore.</p></li><li><p><em>(Optionnel)</em> Un <strong>re-ranking</strong> peut affiner le classement.</p></li></ul>
+
+<h4>3. Génération (produire la réponse)</h4>
+
+<ul><li><p>Les chunks récupérés sont injectés dans la <strong>fenêtre de contexte</strong> du LLM.</p></li><li><p>Le LLM génère une réponse <strong>augmentée</strong> par ces informations.</p></li><li><p>La réponse peut citer les sources (grâce aux métadonnées du Docstore).</p></li></ul>
+
+<h4>Notes: LLM&nbsp;spécialisé (fine tuning)&nbsp;vs RAG</h4>
+
+<p>Il est tout à fait envisageable de vouloir créer un modèle spécialisé sur un domaine très restreint. Dans la pratique, on ne crée pas un modèle en partant de zéro (car un très petit corpus ne suffirait pas pour lui apprendre la grammaire et la logique du langage), mais on utilise une technique appelée le <strong>réglage fin (fine-tuning)</strong>. Cela consiste à prendre un modèle existant et à poursuivre son entraînement exclusivement sur le corpus contenant les informations spécifiques que l'on souhaite lui injecter.</p>
+
+<p><strong>Des études ont comparé cette approche de "LLM spécialisé" face à un système RAG classique.</strong> Par exemple, l'étude française "Derby LLM" a entraîné le modèle Mistral 7B sur de petits corpus métiers (les documents d'un département français et d'une école d'ingénieurs) et a comparé ses réponses avec celles d'un RAG.</p>
+
+<p>Voici quels sont les résultats observés lors de la création d'un tel "mini LLM" expert :</p>
+
+<ul><li><p><strong>Des performances très inférieures au RAG :</strong> Lors d'évaluations en aveugle, les réponses du RAG ont été préférées dans 67 % des cas par les testeurs, contre seulement 3 % pour le modèle spécialisé par fine-tuning. De plus, les scores de pertinence et de fidélité factuelle du RAG sont systématiquement meilleurs.</p></li><li><p><strong>Des hallucinations "vraisemblables" mais fausses :</strong> Le LLM surentraîné sur un petit domaine va parfaitement assimiler le jargon, le style et les éléments de langage de vos documents. Ses réponses auront donc l'air très crédibles, mais les informations factuelles qu'il donnera seront souvent fausses ou inventées.</p></li><li><p><strong>L'incapacité à mémoriser des faits isolés :</strong> Dans un corpus documentaire restreint, une information spécifique (comme un numéro de téléphone ou une définition) n'apparaît souvent qu'une seule fois. Or, il est très difficile pour l'architecture d'un LLM d'apprendre de nouvelles informations factuelles si elles ne lui sont pas répétées de nombreuses fois de manières différentes lors de son entraînement.</p></li><li><p><strong>Le risque élevé de "sur-apprentissage" (overfitting) :</strong> Si, pour forcer le modèle à mémoriser ces données, on augmente la durée de son entraînement sur ce petit corpus, le modèle se dégrade. L'étude montre qu'il perd alors ses capacités de pré-entraînement et commence à générer des boucles de texte insensées (par exemple : <em>"La Drôme est le Département de la Drôme. Le Département de la Drôme est la Drôme du Département de la Drôme"</em> ou l'invention répétitive de faux liens internet).</p></li></ul>
+
+<p><strong>En conclusion, les études démontrent qu'il est beaucoup plus efficace d'utiliser le RAG pour ce type de besoin.</strong></p>
+
+<p>Le RAG est une approche peu coûteuse qui sépare la connaissance de l'intelligence. Au lieu de forcer le LLM à "mémoriser" vos documents de manière imparfaite dans son réseau de neurones, le RAG permet de confier la mémorisation à une base de données externe et d'utiliser le LLM uniquement pour ses capacités linguistiques (lire les documents qu'on lui fournit en temps réel et les synthétiser). C'est aujourd'hui la méthode privilégiée par les entreprises car elle garantit que la réponse est ancrée dans des faits réels et limite considérablement les hallucinations.</p>
