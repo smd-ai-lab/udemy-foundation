@@ -1,0 +1,1222 @@
+<h4>📚 Guide Complet de LangChain</h4>
+
+<h4>Vue d'ensemble version 1.3+</h4>
+
+<p>LangChain est un framework pour construire des applications alimentées par des LLM. Il vous aide à assembler des
+    composants interopérables et des intégrations tierces pour simplifier le développement d’applications d’IA</p>
+
+<p>6 fonctions principales:</p>
+
+<p><strong>📃 LLMs Prompts:</strong></p>
+
+<p>Prompt management, prompt optimization, fournit une interface abstraite pour tous les LLMs.</p>
+
+<p><strong>🔗 Chains:</strong></p>
+
+<p>Chains permet de lier des appels vers les Agents/LLMs, des&nbsp;Outils, le DAG, la gestion de la mémoire, et
+    l'evaluation.</p>
+
+<p><strong>📚 Data Augmented Generation:</strong></p>
+
+<p>Data Augmented Generation permet d'interagir avec des source de données exterieures.</p>
+
+<p><strong>🤖 Agents:</strong></p>
+
+<p>Agents est la fonction principale, permet d'utiliser un LLM.</p>
+
+<p><strong>🧠 Memory:</strong></p>
+
+<p>Memory se refere a la persistance d'un etat entre les appels vers les Chains/Agents.</p>
+
+<p><strong>🧐 Evaluation:</strong></p>
+
+<p>[BETA] Permet d'evaluer les resultats des modèles LLMs nativement. (avec d'autres modeles)</p>
+
+<p><strong>Philosophie</strong> :</p>
+
+<ul>
+    <li>
+        <p>✅ <strong>Prêt pour la production</strong></p>
+    </li>
+    <li>
+        <p>✅ <strong>Middleware modulaire</strong></p>
+    </li>
+    <li>
+        <p>✅ <strong>Déclaratif</strong></p>
+    </li>
+</ul>
+
+<h4>🚀 Get Started</h4>
+
+<h4>Installation</h4>
+
+<p>bash</p>
+
+<pre class="prettyprint linenums">pip install langchain langchain-ollama</pre>
+
+<p>Configuration des variables d'environnement :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">import os
+
+# in case of cloud model
+
+os.environ["OLLAMA_API_KEY"] = "xxxxxxxx"</pre>
+
+<h4>Quickstart - Premier Agent</h4>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">import os
+
+import sys
+
+from langchain.agents import create_agent
+
+from langchain_ollama import ChatOllama
+
+def get_weather(city: str) -&gt; str:
+
+    """Get weather for a given city."""
+
+    return f"It's always sunny in {city}!"
+
+agent = create_agent(
+
+    model=ChatOllama(model="granite4.1:3b", temperature=0),
+
+    tools=[get_weather],
+
+    system_prompt="You are a helpful assistant",
+
+)
+
+result = agent.invoke(
+
+    {"messages": [{"role": "user", "content": "What's the weather in San Francisco?"}]}
+
+)
+
+print(result)</pre>
+
+<p><br></p>
+
+<h4>🧱 Core Components</h4>
+
+<h4>1. Agents</h4>
+
+<p><code>create_agent</code> est la méthode standard pour construire des agents :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langchain.agents import create_agent
+
+agent = create_agent(
+
+    model="openai:gpt-4o-mini",
+
+    tools=[lire_email, envoyer_email, rechercher_web],
+
+    system_prompt="Vous êtes un assistant professionnel.",
+
+)</pre>
+
+<p>L'agent herite de LangGraph et bénéficie de :</p>
+
+<ul>
+    <li>
+        <p>Model static ou dynamic</p>
+    </li>
+    <li>
+        <p>Persistance des conversations</p>
+    </li>
+    <li>
+        <p>Streaming temps réel</p>
+    </li>
+    <li>
+        <p>Mode "Human-in-the-loop"</p>
+    </li>
+    <li>
+        <p>Tools et Middleware</p>
+    </li>
+</ul>
+
+<h4>2. Models</h4>
+
+<p>Interface unifiée pour tous les fournisseurs :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langchain_ollama import ChatOllama
+
+# Ollama
+
+model_ollama = ChatOllama(model="granite4.1:30b", temperature=0.7)
+
+reponse = model_ollama.invoke("Bonjour le monde !")
+
+print(reponse.content)</pre>
+
+<h4>3. Messages</h4>
+
+<p>LangChain utilise une structure de messages standardisée :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+
+from langchain_ollama import ChatOllama
+
+import os
+
+# Use a variable so we can validate cloud usage easily
+
+MODEL = os.getenv("OLLAMA_MODEL", "ollama:granite4.1:3b")
+
+# Quick environment validation when using a cloud model
+
+if ":cloud" in MODEL:
+
+    api_key = os.getenv("OLLAMA_API_KEY")
+
+    host = os.getenv("OLLAMA_HOST")
+
+    if not api_key:
+
+        print("ERROR: Using a cloud Ollama model requires OLLAMA_API_KEY to be set.")
+
+        print("Set it with: export OLLAMA_API_KEY=\"your_key\"")
+
+        sys.exit(1)
+
+    if not host:
+
+        print("NOTE: OLLAMA_HOST not set; defaulting to https://api.ollama.com")
+
+        os.environ["OLLAMA_HOST"] = "https://api.ollama.com"
+
+# Ollama
+
+model_ollama = ChatOllama(model=MODEL, temperature=0.2)
+
+# Messages textuels
+
+system_msg = SystemMessage(content="Vous êtes un expert en programmation Python.")
+
+human_msg = HumanMessage(content="Comment utiliser les décorateurs ?")
+
+ai_msg = AIMessage(content="Les décorateurs sont des fonctions qui modifient...")
+
+# Envoi d'une conversation complète
+
+conversation = [system_msg, human_msg]
+
+reponse = model_ollama.invoke(conversation)
+
+print("=== Réponse du modèle ===")
+
+print(reponse.content)
+
+print()
+
+# Conversation avec historique (messages précédents + nouvelle question)
+
+conversation_with_history = [system_msg, human_msg, ai_msg, HumanMessage(content="Donne-moi un exemple concret.")]
+
+reponse = model_ollama.invoke(conversation_with_history)
+
+print("=== Réponse avec historique ===")
+
+print(reponse.content)</pre>
+
+<h4>4. Tools</h4>
+
+<p>Les outils permettent à l'agent d'interagir avec le monde extérieur :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langchain_ollama import ChatOllama
+
+from langchain.tools import tool
+
+from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
+
+import os
+
+import sys
+
+# Use a variable so we can validate cloud usage easily
+
+MODEL = os.getenv("OLLAMA_MODEL", "granite4.1:3b")
+
+# Quick environment validation when using a cloud model
+
+if ":cloud" in MODEL:
+
+    api_key = os.getenv("OLLAMA_API_KEY")
+
+    host = os.getenv("OLLAMA_HOST")
+
+    if not api_key:
+
+        print("ERROR: Using a cloud Ollama model requires OLLAMA_API_KEY to be set.")
+
+        print("Set it with: export OLLAMA_API_KEY=\"your_key\"")
+
+        sys.exit(1)
+
+    if not host:
+
+        print("NOTE: OLLAMA_HOST not set; defaulting to https://api.ollama.com")
+
+        os.environ["OLLAMA_HOST"] = "https://api.ollama.com"
+
+@tool
+
+def addition(a: float, b: float) -&gt; float:
+
+    """Additionne deux nombres et retourne le résultat."""
+
+    return a + b
+
+tools = [addition]
+
+tools_by_name = {tool.name: tool for tool in tools}
+
+# ChatOllama avec outils LangChain
+
+model_ollama = ChatOllama(model=MODEL, temperature=0)
+
+model_with_tools = model_ollama.bind_tools(tools)
+
+messages = [
+
+    SystemMessage(content="Tu es un assistant utile. Pour les additions, utilise l'outil addition."),
+
+    HumanMessage(content="Combien font 123.5 + 456.7 ?")
+
+]
+
+# 1. Le modèle décide s'il doit appeler un outil.
+
+ai_message = model_with_tools.invoke(messages)
+
+messages.append(ai_message)
+
+print("=== Appels d'outils demandés par le modèle ===")
+
+print(ai_message.tool_calls)
+
+print()
+
+if not ai_message.tool_calls:
+
+    print("Le modèle n'a pas demandé d'appel d'outil.")
+
+    print("Réponse directe du modèle :")
+
+    print(ai_message.content)
+
+    sys.exit(0)
+
+# 2. Python exécute les outils demandés, puis ajoute les résultats à la conversation.
+
+for tool_call in ai_message.tool_calls:
+
+    selected_tool = tools_by_name[tool_call["name"]]
+
+    tool_result = selected_tool.invoke(tool_call["args"])
+
+    messages.append(
+
+        ToolMessage(
+
+            content=str(tool_result),
+
+            tool_call_id=tool_call["id"],
+
+        )
+
+    )
+
+# 3. Le modèle reçoit le résultat de l'outil et répond à l'utilisateur.
+
+final_response = model_with_tools.invoke(messages)
+
+print("=== Réponse finale ===")
+
+print(final_response.content)</pre>
+
+<h4>5. Short-term Memory</h4>
+
+<p>Persistance automatique de l'état des conversations :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langgraph.checkpoint import MemorySaver
+
+# Création du sauvegarde mémoire
+
+checkpointer = MemorySaver()
+
+agent = create_agent(
+
+    model=model,
+
+    tools=outils,
+
+    checkpointer=checkpointer  # Active la persistance
+
+)
+
+# Session 1 - L'agent "se souvient"
+
+config = {"configurable": {"thread_id": "utilisateur-123"}}
+
+reponse = agent.invoke(
+
+    {"messages": [{"role": "user", "content": "Je m'appelle Marie"}]},
+
+    config=config
+
+)
+
+# Session 2 - L'agent a gardé le contexte
+
+reponse = agent.invoke(
+
+    {"messages": [{"role": "user", "content": "Quel est mon nom ?"}]},
+
+    config=config
+
+)
+
+# Réponse : "Vous vous appelez Marie"</pre>
+
+<h4>6. Streaming (Flux temps réel)</h4>
+
+<p>Pour une expérience utilisateur interactive :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums"># Streaming token par token
+
+for chunk in agent.stream({
+
+    "messages": [{"role": "user", "content": "Racontez une histoire de 100 mots"}]
+
+}):
+
+    if "content" in chunk:
+
+        print(chunk["content"], end="", flush=True)
+
+# Streaming avec événements
+
+async for event in agent.astream_events({
+
+    "messages": [{"role": "user", "content": "Analysez ce texte"}]
+
+}, version="v2"):
+
+    print(f"Événement: {event['event']}")</pre>
+
+<h4>7. Structured Output (Sortie Structurée)</h4>
+
+<p>Obtenir des réponses dans un format précis :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from pydantic import BaseModel
+
+from typing import List
+
+from langchain.output_parsers import PydanticOutputParser
+
+class Article(BaseModel):
+
+    titre: str
+
+    auteur: str
+
+    mots_cles: List[str]
+
+    resume: str
+
+parser = PydanticOutputParser(pydantic_object=Article)
+
+# Méthode 1 : Avec l'agent
+
+agent = create_agent(
+
+    model=model,
+
+    response_format=Article  # Déclare le format attendu
+
+)
+
+# Méthode 2 : Avec parsing manuel
+
+prompt = f"""
+
+Extrayez les informations suivantes au format JSON :
+
+{parser.get_format_instructions()}
+
+Texte : {mon_texte}
+
+"""
+
+reponse = model.invoke(prompt)
+
+article = parser.parse(reponse.content)
+
+print(article.titre, article.mots_cles)</pre>
+
+<h4>🔌 Middleware</h4>
+
+<h4>Vue d'ensemble</h4>
+
+<p>Le middleware est le mécanisme central de personnalisation dans LangChain v1.0. Il permet d'intercepter, modifier ou
+    étendre le comportement de l'agent à différentes étapes.</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langchain.agents.middleware import Middleware
+
+from typing import Any, Dict
+
+class MonMiddleware(Middleware):
+
+    async def before_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
+
+        print("Avant l'exécution de l'agent")
+
+        return state
+
+    
+
+    async def after_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
+
+        print("Après l'exécution de l'agent")
+
+        return state</pre>
+
+<h4>Middleware Préconstruit</h4>
+
+<p>LangChain fournit plusieurs middlewares prêts à l'emploi :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langchain.agents.middleware import (
+
+    SummarizationMiddleware,
+
+    HumanInTheLoopMiddleware,
+
+    ToolRetryMiddleware,
+
+    RateLimitMiddleware
+
+)
+
+agent = create_agent(
+
+    model=model,
+
+    tools=outils,
+
+    middleware=[
+
+        # 1. Résumé automatique des longues conversations
+
+        SummarizationMiddleware(
+
+            model="gpt-4o-mini",
+
+            trigger={"tokens": 1000}  # Déclenche à 1000 tokens
+
+        ),
+
+        
+
+        # 2. Validation humaine avant actions sensibles
+
+        HumanInTheLoopMiddleware(
+
+            interrupt_on={"envoyer_email": {"approval_required": True}}
+
+        ),
+
+        
+
+        # 3. Réessai automatique en cas d'échec
+
+        ToolRetryMiddleware(
+
+            max_retries=3,
+
+            backoff_factor=2.0
+
+        ),
+
+        
+
+        # 4. Limitation du taux de requêtes
+
+        RateLimitMiddleware(
+
+            requests_per_minute=60,
+
+            requests_per_day=1000
+
+        )
+
+    ]
+
+)</pre>
+
+<h4>Middleware Personnalisé</h4>
+
+<p>Exemple d'un middleware de logging :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">import time
+
+from langchain.agents.middleware import Middleware
+
+from typing import Any, Dict, Optional
+
+class LoggingMiddleware(Middleware):
+
+    def __init__(self, log_file: str = "agent.log"):
+
+        self.log_file = log_file
+
+    
+
+    async def before_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
+
+        self.start_time = time.time()
+
+        user_message = state["messages"][-1]["content"]
+
+        self._log(f"Question utilisateur: {user_message}")
+
+        return state
+
+    
+
+    async def after_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
+
+        duration = time.time() - self.start_time
+
+        response = state["messages"][-1]["content"]
+
+        self._log(f"Réponse (en {duration:.2f}s): {response[:100]}...")
+
+        return state
+
+    
+
+    def _log(self, message: str):
+
+        with open(self.log_file, "a") as f:
+
+            f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
+
+# Utilisation
+
+agent = create_agent(
+
+    model=model,
+
+    tools=outils,
+
+    middleware=[LoggingMiddleware()]
+
+)</pre>
+
+<h4>🎨 Frontend</h4>
+
+<h4>Vue d'ensemble</h4>
+
+<p>LangChain s'intègre facilement avec différents frameworks frontend :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums"># API FastAPI pour exposition backend
+
+from fastapi import FastAPI, HTTPException
+
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class Question(BaseModel):
+
+    texte: str
+
+    thread_id: str
+
+@app.post("/chat")
+
+async def chat(question: Question):
+
+    response = agent.invoke(
+
+        {"messages": [{"role": "user", "content": question.texte}]},
+
+        config={"configurable": {"thread_id": question.thread_id}}
+
+    )
+
+    return {"reponse": response["content"]}</pre>
+
+<p><strong>Intégration React</strong> (exemple d'appel) :</p>
+
+<p>javascript</p>
+
+<pre class="prettyprint linenums">// Client React
+
+const response = await fetch("/chat", {
+
+  method: "POST",
+
+  headers: { "Content-Type": "application/json" },
+
+  body: JSON.stringify({ texte: message, thread_id: sessionId })
+
+});
+
+const data = await response.json();</pre>
+
+<h4>⚙️ Advanced Usage</h4>
+
+<h4>1. Guardrails</h4>
+
+<p>Sécuriser les réponses de l'agent :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langchain.agents.middleware import GuardrailMiddleware
+
+def verification_securite(messages: list) -&gt; bool:
+
+    """Vérifie si le message est approprié"""
+
+    interdit = ["mots", "interdits", "sensibles"]
+
+    dernier_message = messages[-1]["content"].lower()
+
+    return not any(mot in dernier_message for mot in interdit)
+
+agent = create_agent(
+
+    model=model,
+
+    middleware=[
+
+        GuardrailMiddleware(
+
+            check=verification_securite,
+
+            on_violation="block",  # ou "warn", "override"
+
+            fallback_response="Je ne peux pas répondre à cette question."
+
+        )
+
+    ]
+
+)</pre>
+
+<h4>2. Runtime</h4>
+
+<p>Configuration avancée du moteur d'exécution :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langgraph.graph import StateGraph
+
+from langgraph.runtime import RuntimeConfig
+
+config = RuntimeConfig(
+
+    max_iterations=10,           # Maximum de tours agent
+
+    timeout_seconds=30,          # Timeout global
+
+    retry_policy={
+
+        "max_attempts": 3,
+
+        "delay_seconds": 1
+
+    }
+
+)
+
+agent = create_agent(
+
+    model=model,
+
+    tools=outils,
+
+    runtime_config=config
+
+)</pre>
+
+<h4>3. Context Engineering</h4>
+
+<p>Optimisation du contexte envoyé au LLM :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langchain.agents.middleware import ContextWindowMiddleware
+
+agent = create_agent(
+
+    model=model,
+
+    middleware=[
+
+        ContextWindowMiddleware(
+
+            max_tokens=4000,
+
+            strategy="summarize",
+
+            summarization_model="gpt-3.5-turbo"
+
+        )
+
+    ]
+
+)
+
+# Gestion manuelle du contexte
+
+agent.set_context({
+
+    "user_preferences": {"language": "fr", "style": "formal"},
+
+    "retrieved_documents": [...],
+
+    "conversation_summary": "L'utilisateur demande des informations sur..."
+
+})</pre>
+
+<h4>4. Model Context Protocol (MCP)</h4>
+
+<p>Protocole standardisé pour l'intégration d'outils :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums"># Définition d'un serveur MCP
+
+from mcp import Server, Tool
+
+server = Server("mon-serveur-llm")
+
+@server.tool()
+
+async def base_connaissances(requete: str) -&gt; str:
+
+    """Interroge la base de connaissances interne"""
+
+    return await rechercher_vecteurs(requete)
+
+# Connexion dans LangChain
+
+from langchain.integrations.mcp import MCPConnector
+
+mcp_tools = await MCPConnector.connect("localhost:5000")
+
+agent = create_agent(model=model, tools=mcp_tools)</pre>
+
+<h4>5. Human-in-the-loop (HITL)</h4>
+
+<p>Validation humaine des actions critiques :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langgraph.checkpoint import PostgresSaver
+
+# Configuration avec base de données persistante
+
+checkpointer = PostgresSaver.from_conn_string("postgresql://user:pass@localhost/db")
+
+agent = create_agent(
+
+    model=model,
+
+    tools=[envoyer_paiement, supprimer_fichier, envoyer_email],
+
+    middleware=[
+
+        HumanInTheLoopMiddleware(
+
+            interrupt_on={
+
+                "envoyer_paiement": {
+
+                    "always": True,
+
+                    "require_comment": True
+
+                },
+
+                "supprimer_fichier": {
+
+                    "check_paths": ["/important/*"],
+
+                    "approval_message": "Confirmez-vous la suppression ?"
+
+                }
+
+            }
+
+        )
+
+    ],
+
+    checkpointer=checkpointer
+
+)
+
+# L'agent s'interrompt automatiquement pour validation
+
+# Reprise après validation humaine</pre>
+
+<h4>6. Retrieval (RAG - Retrieval-Augmented Generation)</h4>
+
+<p>Augmentation de la génération par recherche documentaire :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langchain.vectorstores import Chroma
+
+from langchain.embeddings import OpenAIEmbeddings
+
+from langchain.document_loaders import TextLoader
+
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+# 1. Chargement et indexation des documents
+
+docs = TextLoader("ma_base_connaissances.txt").load()
+
+splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+
+chunks = splitter.split_documents(docs)
+
+vectorstore = Chroma.from_documents(
+
+    chunks, 
+
+    OpenAIEmbeddings(),
+
+    collection_name="ma_base"
+
+)
+
+# 2. Intégration dans l'agent
+
+from langchain.agents.middleware import RetrievalMiddleware
+
+agent = create_agent(
+
+    model=model,
+
+    middleware=[
+
+        RetrievalMiddleware(
+
+            vectorstore=vectorstore,
+
+            k=5,  # Récupère les 5 documents les plus pertinents
+
+            strategy="relevance_score",
+
+            threshold=0.7
+
+        )
+
+    ]
+
+)</pre>
+
+<h4>7. Long-term Memory (Mémoire Long Terme)</h4>
+
+<p>Maintien d'informations persistantes entre les sessions :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langgraph.store import RedisStore
+
+from langchain.agents.middleware import LongTermMemoryMiddleware
+
+# Stockage persistant (Redis par exemple)
+
+store = RedisStore(host="localhost", port=6379)
+
+agent = create_agent(
+
+    model=model,
+
+    middleware=[
+
+        LongTermMemoryMiddleware(
+
+            store=store,
+
+            memory_types=["user_preferences", "facts", "history"],
+
+            auto_save=True,
+
+            retrieval_strategy="semantic",  # ou "recency", "importance"
+
+            max_memories=50
+
+        )
+
+    ]
+
+)
+
+# L'agent se souvient des préférences de l'utilisateur
+
+agent.invoke({
+
+    "messages": [{"role": "user", "content": "Je préfère les réponses en français"}]
+
+}, config={"configurable": {"user_id": "alice@email.com"}})
+
+# Dans une conversation ultérieure
+
+agent.invoke({
+
+    "messages": [{"role": "user", "content": "Dans quelle langue dois-je répondre ?"}]
+
+}, config={"configurable": {"user_id": "alice@email.com"}})
+
+# Répondra en français</pre>
+
+<h4>🤖 Agent Development</h4>
+
+<h4>LangSmith Studio</h4>
+
+<p>Environnement de débogage et de test :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums"># Configuration du tracking avec LangSmith
+
+from langsmith import Client
+
+client = Client()
+
+client.create_project("mon-projet-agent")
+
+# Lancement d'une session de test
+
+from langsmith.run_helpers import traceable
+
+@traceable
+
+def tester_agent(question: str):
+
+    return agent.invoke({"messages": [{"role": "user", "content": question}]})
+
+# Interface LangSmith Studio (Web UI)
+
+# Permet de :
+
+# - Visualiser les traces d'exécution
+
+# - Analyser les tokens et coûts
+
+# - Comparer les performances entre versions
+
+# - Debugger les erreurs avec "time travel"
+
+# Examen du graphe d'exécution
+
+print(agent.get_graph().draw_ascii())</pre>
+
+<h4>Agent Chat UI</h4>
+
+<p>Interface utilisateur prête à l'emploi :</p>
+
+<p>bash</p>
+
+<pre class="prettyprint linenums"># Installation de l'interface
+
+pip install langchain-agent-ui
+
+# Lancement du serveur
+
+langchain serve --ui --port 8000</pre>
+
+<p>python</p>
+
+<pre class="prettyprint linenums"># Intégration personnalisée avec l'interface
+
+from langchain_agent_ui import ChatInterface, AgentConfig
+
+ui = ChatInterface(
+
+    agent_config=AgentConfig(
+
+        agent=agent,
+
+        title="Mon Assistant IA",
+
+        theme="dark",
+
+        features=["file_upload", "voice_input", "history"]
+
+    )
+
+)
+
+ui.run(host="0.0.0.0", port=8080)</pre>
+
+<h4>☁️ Deploy with LangSmith</h4>
+
+<h4>Déploiement</h4>
+
+<p>bash</p>
+
+<pre class="prettyprint linenums"># Installation de LangSmith CLI
+
+pip install langsmith-cli
+
+# Configuration du déploiement
+
+langsmith deploy init
+
+# Déploiement vers le cloud
+
+langsmith deploy push \
+
+  --project mon-projet \
+
+  --environment production \
+
+  --region eu-west-1</pre>
+
+<p><strong>Fichier de configuration (</strong><code><strong>langsmith.yaml</strong></code><strong>)</strong> :</p>
+
+<p>yaml</p>
+
+<pre class="prettyprint linenums">project_name: mon-agent-production
+
+version: 1.0.0
+
+agent:
+
+  entrypoint: src/agent.py:create_app
+
+  model: openai:gpt-4o-mini
+
+  tools:
+
+    - src.tools.database
+
+    - src.tools.api
+
+scaling:
+
+  min_replicas: 2
+
+  max_replicas: 10
+
+  target_cpu_utilization: 70
+
+resources:
+
+  memory: 2Gi
+
+  cpu: 1</pre>
+
+<h4>Observabilité</h4>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langsmith import Client
+
+from langsmith.wrappers import wrap_openai
+
+# Configuration du monitoring
+
+client = Client()
+
+client.trace_sessions = True
+
+# Métriques automatiquement collectées
+
+# - Latence par appel d'outil
+
+# - Taux d'erreur par type de requête
+
+# - Coût par session utilisateur
+
+# - Distribution des tokens utilisés
+
+# Tableau de bord personnalisé
+
+from langsmith.dashboard import MetricsDashboard
+
+dashboard = MetricsDashboard(
+
+    project="mon-agent-production",
+
+    metrics=[
+
+        "response_time_p95",
+
+        "success_rate",
+
+        "cost_per_user",
+
+        "tool_usage_frequency"
+
+    ],
+
+    alert_rules={
+
+        "error_rate": {"&gt;": 0.05, "action": "email"},
+
+        "cost_per_day": {"&gt;": 100, "action": "slack"}
+
+    }
+
+)</pre>
+
+<p><strong>Exemples de requêtes d'observabilité</strong> :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums"># Analyse des performances
+
+client.run_analytics("""
+
+    SELECT 
+
+        date_trunc('hour', timestamp) as hour,
+
+        AVG(latency_ms) as avg_latency,
+
+        COUNT(CASE WHEN error THEN 1 END) / COUNT(*) as error_rate
+
+    FROM traces
+
+    WHERE project = 'mon-agent-production'
+
+    GROUP BY hour
+
+""")</pre>
