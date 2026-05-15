@@ -14,12 +14,12 @@ agent = create_agent(
     system_prompt="You are a helpful assistant",
 )
 
-reponse = agent.invoke(
+response = agent.invoke(
     {"messages": [{"role": "user", "content": "What's the weather in San Francisco?"}]}
 )
 
 # Print the whole conversation
-for msg in reponse["messages"]:
+for msg in response["messages"]:
     role = msg.type if hasattr(msg, "type") else msg.get("role", "unknown")
     content = msg.content if hasattr(msg, "content") else msg.get("content", "")
     print(f"[{role}]: {content}")
