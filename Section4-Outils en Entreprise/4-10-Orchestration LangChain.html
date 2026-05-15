@@ -1,0 +1,461 @@
+<h4>📚 Guide Complet de LangChain</h4>
+
+<h4>Vue d'ensemble version 1.3+</h4>
+
+<p>LangChain est un framework pour construire des applications alimentées par des LLM. Il vous aide à assembler des composants interopérables et des intégrations tierces pour simplifier le développement d’applications d’IA</p>
+
+<p>6 fonctions principales:</p>
+
+<p><strong>📃 LLMs Prompts:</strong></p>
+
+<p>Prompt management, prompt optimization, fournit une interface abstraite pour tous les LLMs.</p>
+
+<p><strong>🔗 Chains:</strong></p>
+
+<p>Chains permet de lier des appels vers les Agents/LLMs, des&nbsp;Outils, le DAG, la gestion de la mémoire, et l'evaluation.</p>
+
+<p><strong>📚 Data Augmented Generation:</strong></p>
+
+<p>Data Augmented Generation permet d'interagir avec des source de données exterieures.</p>
+
+<p><strong>🤖 Agents:</strong></p>
+
+<p>Agents est la fonction principale, permet d'utiliser un LLM.</p>
+
+<p><strong>🧠 Memory:</strong></p>
+
+<p>Memory se refere a la persistance d'un etat entre les appels vers les Chains/Agents.</p>
+
+<p><strong>🧐 Evaluation:</strong></p>
+
+<p>[BETA] Permet d'evaluer les resultats des modèles LLMs nativement. (avec d'autres modeles)</p>
+
+<p><strong>Philosophie</strong> :</p>
+
+<ul><li><p>✅ <strong>Prêt pour la production</strong></p></li><li><p>✅ <strong>Middleware modulaire</strong></p></li><li><p>✅ <strong>Déclaratif</strong></p></li></ul>
+
+<h4>🚀 Get Started</h4>
+
+<h4>Installation</h4>
+
+<p>bash</p>
+
+<pre class="prettyprint linenums">pip install langchain langchain-ollama</pre>
+
+<p>Configuration des variables d'environnement :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">import os
+
+# in case of cloud model
+
+os.environ["OLLAMA_API_KEY"] = "xxxxxxxx"</pre>
+
+<h4>Quickstart - Premier Agent</h4>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">import os
+
+import sys
+
+from langchain.agents import create_agent
+
+from langchain_ollama import ChatOllama
+
+def get_weather(city: str) -&gt; str:
+
+&nbsp; &nbsp; """Get weather for a given city."""
+
+&nbsp; &nbsp; return f"It's always sunny in {city}!"
+
+agent = create_agent(
+
+&nbsp; &nbsp; model=ChatOllama(model="granite4.1:3b", temperature=0),
+
+&nbsp; &nbsp; tools=[get_weather],
+
+&nbsp; &nbsp; system_prompt="You are a helpful assistant",
+
+)
+
+result = agent.invoke(
+
+&nbsp; &nbsp; {"messages": [{"role": "user", "content": "What's the weather in San Francisco?"}]}
+
+)
+
+print(result)</pre>
+
+<p><br></p>
+
+<h4>🧱 Core Components</h4>
+
+<h4>1. Agents</h4>
+
+<p><code>create_agent</code> est la méthode standard pour construire des agents :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langchain.agents import create_agent
+
+agent = create_agent(
+
+&nbsp; &nbsp; model="openai:gpt-4o-mini",
+
+&nbsp; &nbsp; tools=[lire_email, envoyer_email, rechercher_web],
+
+&nbsp; &nbsp; system_prompt="Vous êtes un assistant professionnel.",
+
+)</pre>
+
+<p>L'agent herite de LangGraph et bénéficie de :</p>
+
+<ul><li><p>Model static ou dynamic</p></li><li><p>Persistance des conversations</p></li><li><p>Streaming temps réel</p></li><li><p>Mode "Human-in-the-loop"</p></li><li><p>Tools et Middleware</p></li></ul>
+
+<h4>2. Models</h4>
+
+<p>Interface unifiée pour tous les fournisseurs :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langchain_ollama import ChatOllama
+
+# Ollama
+
+model_ollama = ChatOllama(model="granite4.1:30b", temperature=0.7)
+
+reponse = model_ollama.invoke("Bonjour le monde !")
+
+print(reponse.content)</pre>
+
+<h4>3. Messages</h4>
+
+<p>LangChain utilise une structure de messages standardisée :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+
+from langchain_ollama import ChatOllama
+
+import os
+
+# Use a variable so we can validate cloud usage easily
+
+MODEL = os.getenv("OLLAMA_MODEL", "ollama:granite4.1:3b")
+
+# Quick environment validation when using a cloud model
+
+if ":cloud" in MODEL:
+
+&nbsp; &nbsp; api_key = os.getenv("OLLAMA_API_KEY")
+
+&nbsp; &nbsp; host = os.getenv("OLLAMA_HOST")
+
+&nbsp; &nbsp; if not api_key:
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("ERROR: Using a cloud Ollama model requires OLLAMA_API_KEY to be set.")
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("Set it with: export OLLAMA_API_KEY=\"your_key\"")
+
+&nbsp; &nbsp; &nbsp; &nbsp; sys.exit(1)
+
+&nbsp; &nbsp; if not host:
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("NOTE: OLLAMA_HOST not set; defaulting to https://api.ollama.com")
+
+&nbsp; &nbsp; &nbsp; &nbsp; os.environ["OLLAMA_HOST"] = "https://api.ollama.com"
+
+# Ollama
+
+model_ollama = ChatOllama(model=MODEL, temperature=0.2)
+
+# Messages textuels
+
+system_msg = SystemMessage(content="Vous êtes un expert en programmation Python.")
+
+human_msg = HumanMessage(content="Comment utiliser les décorateurs ?")
+
+ai_msg = AIMessage(content="Les décorateurs sont des fonctions qui modifient...")
+
+# Envoi d'une conversation complète
+
+conversation = [system_msg, human_msg]
+
+reponse = model_ollama.invoke(conversation)
+
+print("=== Réponse du modèle ===")
+
+print(reponse.content)
+
+print()
+
+# Conversation avec historique (messages précédents + nouvelle question)
+
+conversation_with_history = [system_msg, human_msg, ai_msg, HumanMessage(content="Donne-moi un exemple concret.")]
+
+reponse = model_ollama.invoke(conversation_with_history)
+
+print("=== Réponse avec historique ===")
+
+print(reponse.content)</pre>
+
+<h4>4. Tools</h4>
+
+<p>Les outils permettent à l'agent d'interagir avec le monde extérieur :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">from langchain_ollama import ChatOllama
+
+from langchain.tools import tool
+
+from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
+
+import os
+
+import sys
+
+# Use a variable so we can validate cloud usage easily
+
+MODEL = os.getenv("OLLAMA_MODEL", "granite4.1:3b")
+
+# Quick environment validation when using a cloud model
+
+if ":cloud" in MODEL:
+
+&nbsp; &nbsp; api_key = os.getenv("OLLAMA_API_KEY")
+
+&nbsp; &nbsp; host = os.getenv("OLLAMA_HOST")
+
+&nbsp; &nbsp; if not api_key:
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("ERROR: Using a cloud Ollama model requires OLLAMA_API_KEY to be set.")
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("Set it with: export OLLAMA_API_KEY=\"your_key\"")
+
+&nbsp; &nbsp; &nbsp; &nbsp; sys.exit(1)
+
+&nbsp; &nbsp; if not host:
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("NOTE: OLLAMA_HOST not set; defaulting to https://api.ollama.com")
+
+&nbsp; &nbsp; &nbsp; &nbsp; os.environ["OLLAMA_HOST"] = "https://api.ollama.com"
+
+@tool
+
+def addition(a: float, b: float) -&gt; float:
+
+&nbsp; &nbsp; """Additionne deux nombres et retourne le résultat."""
+
+&nbsp; &nbsp; return a + b
+
+tools = [addition]
+
+tools_by_name = {tool.name: tool for tool in tools}
+
+# ChatOllama avec outils LangChain
+
+model_ollama = ChatOllama(model=MODEL, temperature=0)
+
+model_with_tools = model_ollama.bind_tools(tools)
+
+messages = [
+
+&nbsp; &nbsp; SystemMessage(content="Tu es un assistant utile. Pour les additions, utilise l'outil addition."),
+
+&nbsp; &nbsp; HumanMessage(content="Combien font 123.5 + 456.7 ?")
+
+]
+
+# 1. Le modèle décide s'il doit appeler un outil.
+
+ai_message = model_with_tools.invoke(messages)
+
+messages.append(ai_message)
+
+print("=== Appels d'outils demandés par le modèle ===")
+
+print(ai_message.tool_calls)
+
+print()
+
+if not ai_message.tool_calls:
+
+&nbsp; &nbsp; print("Le modèle n'a pas demandé d'appel d'outil.")
+
+&nbsp; &nbsp; print("Réponse directe du modèle :")
+
+&nbsp; &nbsp; print(ai_message.content)
+
+&nbsp; &nbsp; sys.exit(0)
+
+# 2. Python exécute les outils demandés, puis ajoute les résultats à la conversation.
+
+for tool_call in ai_message.tool_calls:
+
+&nbsp; &nbsp; selected_tool = tools_by_name[tool_call["name"]]
+
+&nbsp; &nbsp; tool_result = selected_tool.invoke(tool_call["args"])
+
+&nbsp; &nbsp; messages.append(
+
+&nbsp; &nbsp; &nbsp; &nbsp; ToolMessage(
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; content=str(tool_result),
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; tool_call_id=tool_call["id"],
+
+&nbsp; &nbsp; &nbsp; &nbsp; )
+
+&nbsp; &nbsp; )
+
+# 3. Le modèle reçoit le résultat de l'outil et répond à l'utilisateur.
+
+final_response = model_with_tools.invoke(messages)
+
+print("=== Réponse finale ===")
+
+print(final_response.content)</pre>
+
+<h4>5. Short-term Memory</h4>
+
+<p>Persistance automatique de l'état des conversations :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">import os
+
+from langchain.agents import create_agent
+
+from langchain_ollama import ChatOllama
+
+from langgraph.checkpoint.memory import InMemorySaver&nbsp; 
+
+# Use a variable so we can validate cloud usage easily
+
+MODEL = os.getenv("OLLAMA_MODEL", "ollama:granite4.1:3b")
+
+# Quick environment validation when using a cloud model
+
+if ":cloud" in MODEL:
+
+&nbsp; &nbsp; api_key = os.getenv("OLLAMA_API_KEY")
+
+&nbsp; &nbsp; host = os.getenv("OLLAMA_HOST")
+
+&nbsp; &nbsp; if not api_key:
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("ERROR: Using a cloud Ollama model requires OLLAMA_API_KEY to be set.")
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("Set it with: export OLLAMA_API_KEY=\"your_key\"")
+
+&nbsp; &nbsp; &nbsp; &nbsp; sys.exit(1)
+
+&nbsp; &nbsp; if not host:
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("NOTE: OLLAMA_HOST not set; defaulting to https://api.ollama.com")
+
+&nbsp; &nbsp; &nbsp; &nbsp; os.environ["OLLAMA_HOST"] = "https://api.ollama.com"
+
+# Ollama
+
+model_ollama = ChatOllama(model=MODEL, temperature=0.2)
+
+# Création du sauvegarde mémoire
+
+checkpointer = InMemorySaver()
+
+agent = create_agent(
+
+&nbsp; model=model_ollama,
+
+&nbsp; checkpointer=checkpointer # Active la persistance
+
+)
+
+# Session 1 - L'agent "se souvient"
+
+config = {"configurable": {"thread_id": "utilisateur-123"}}
+
+reponse = agent.invoke(
+
+&nbsp; {"messages": [{"role": "user", "content": "Je m'appelle utilisateur-123"}]},
+
+&nbsp; config=config
+
+)
+
+# Session 2 - L'agent a gardé le contexte
+
+reponse = agent.invoke(
+
+&nbsp; {"messages": [{"role": "user", "content": "Quel est mon nom ?"}]},
+
+&nbsp; config=config
+
+)
+
+# Print the whole conversation
+
+for msg in reponse["messages"]:
+
+&nbsp; &nbsp; role = msg.type if hasattr(msg, "type") else msg.get("role", "unknown")
+
+&nbsp; &nbsp; content = msg.content if hasattr(msg, "content") else msg.get("content", "")
+
+&nbsp; &nbsp; print(f"[{role}]: {content}")
+
+&nbsp; &nbsp; print("---")</pre>
+
+<h4>6. Streaming</h4>
+
+<p>Il existe plusieurs maniere de recuperer un Flux, depuis la version 1.3+ il est conseillé d'utiliser les stream_events.</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">stream = agent.stream_events({
+
+&nbsp; &nbsp; "messages": [{"role": "user", "content": "What is the weather in SF?"}],
+
+}, version="v3")
+
+for message in stream.messages:
+
+&nbsp; &nbsp; for delta in message.text:
+
+&nbsp; &nbsp; &nbsp; &nbsp; print(delta, end="", flush=True)</pre>
+
+<h4>7. Structured Output</h4>
+
+<p>Obtenir des réponses dans un format précis :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">class ContactInfo(BaseModel):
+
+&nbsp; &nbsp; """Contact information for a person."""
+
+&nbsp; &nbsp; name: str = Field(description="The name of the person")
+
+&nbsp; &nbsp; email: str = Field(description="The email address of the person")
+
+&nbsp; &nbsp; phone: str = Field(description="The phone number of the person")
+
+agent = create_agent(
+
+&nbsp; &nbsp; model=model_ollama,
+
+&nbsp; &nbsp; response_format=ContactInfo&nbsp; # Auto-selects ProviderStrategy
+
+)
+
+result = agent.invoke({
+
+&nbsp; &nbsp; "messages": [{"role": "user", "content": "Extract contact info from: John Doe, john@example.com, (555) 123-4567"}]
+
+})
+
+print(result["structured_response"])</pre>
