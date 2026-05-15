@@ -1,0 +1,383 @@
+<h4>🔌 Middleware</h4>
+
+<p>Le middleware est le mécanisme central de personnalisation dans LangChain . Il permet d'intercepter, modifier ou étendre le comportement de l'agent à différentes étapes.</p>
+
+<figure><img src="https://img-c.udemycdn.com/redactor/raw/article_lecture/2026-05-15_08-22-44-908f76f00046dee1a30ceb27b859b236.jpg" width="432" height="487"></figure>
+
+<p>Dans le cadre d'une utilisation en entreprise, il est necessaire d'utiliser les Middleware, il existe une liste préconstruite, en plus de la possibilité d'ajouter ses propres Custom Middleware.</p>
+
+<p><strong>Middleware</strong> Description</p>
+
+<p><strong>Summarization:</strong> Automatically summarize conversation history when approaching token limits.
+
+<strong>Human-in-the-loop:</strong> Pause execution for human approval of tool calls.
+
+<strong>Model call limit:</strong>&nbsp; Limit the number of model calls to prevent excessive costs.
+
+<strong>Tool call limit:</strong> Control tool execution by limiting call counts.
+
+<strong>Model fallback:</strong>&nbsp; Automatically fallback to alternative models when primary fails.
+
+<strong>PII detection:</strong> Detect and handle Personally Identifiable Information (PII).
+
+<strong>To-do list:</strong>&nbsp; Equip agents with task planning and tracking capabilities.
+
+<strong>LLM tool selector:</strong> Use an LLM to select relevant tools before calling main model.
+
+<strong>Tool retry:</strong>&nbsp; Automatically retry failed tool calls with exponential backoff.
+
+<strong>Model retry:</strong> Automatically retry failed model calls with exponential backoff.
+
+<strong>LLM tool emulator:</strong> Emulate tool execution using an LLM for testing purposes.
+
+<strong>Context editing:</strong> Manage conversation context by trimming or clearing tool uses.
+
+<strong>Shell tool:</strong>&nbsp; Expose a persistent shell session to agents for command execution.
+
+<strong>File search:</strong> Provide Glob and Grep search tools over filesystem files.
+
+<strong>Filesystem:</strong>&nbsp; Provide agents with a filesystem for storing context and long-term memories.
+
+<strong>Subagent:</strong>&nbsp; Add the ability to spawn subagents.
+
+</p>
+
+<h4>🎨 Frontend</h4>
+
+<p>Il est possible de créer des frontends interactifs sur les objets: <code>createAgent</code>. Tous les patterns sont possible, message, debug, HIT.</p>
+
+<h4><a href="https://docs.langchain.com/oss/python/langchain/frontend/overview#architecture" target="_blank" rel="noopener noreferrer">​</a>Architecture</h4>
+
+<p>Toujours la meme méthode: un backend streams fournit un flux avec l'objet <code>useStream</code> en mode "hook" sur l'objet agent (create agent). </p>
+
+<p>Exemple d'une petite application React:</p>
+
+<figure><img src="https://img-c.udemycdn.com/redactor/raw/article_lecture/2026-05-15_08-45-01-032362a127a067128d30fa9dab6b030d.jpg"></figure>
+
+<p>Code Agent.ts</p>
+
+<pre class="prettyprint linenums">class ContactInfo(BaseModel):
+
+import { createAgent } from "langchain";
+
+if (!process.env.ANTHROPIC_API_KEY) {
+
+&nbsp; throw new Error("ANTHROPIC_API_KEY is not set");
+
+}
+
+export const agent = createAgent({
+
+&nbsp; model: "anthropic:claude-haiku-4-5",
+
+});</pre>
+
+<p>Code Preview.tsx</p>
+
+<pre class="prettyprint linenums">import { useRef } from "react";
+
+import { useStream } from "@langchain/react";
+
+import { HumanMessage, AIMessage } from "langchain";
+
+import type { simpleAgent } from "./agent";
+
+import { AGENT_SERVER_URL, SLUG_TO_ASSISTANT } from "@/constants";
+
+import {
+
+&nbsp; useTraceContext,
+
+&nbsp; ChatContainer,
+
+&nbsp; AIBubble,
+
+&nbsp; HumanBubble,
+
+&nbsp; ChatInput,
+
+&nbsp; TypingIndicator,
+
+&nbsp; PresetPrompts,
+
+&nbsp; Markdown,
+
+} from "@/components/playground";
+
+const PRESETS = [
+
+&nbsp; "Write a quick-start guide for building a REST API with Express.js",
+
+&nbsp; "Compare Python and Rust in a table with pros and cons",
+
+&nbsp; "Explain the merge sort algorithm with code examples",
+
+];
+
+export default function MarkdownMessagesChat() {
+
+&nbsp; const { onRunCreated } = useTraceContext();
+
+&nbsp; const stream = useStream&lt;typeof simpleAgent&gt;({
+
+&nbsp; &nbsp; apiUrl: AGENT_SERVER_URL,
+
+&nbsp; &nbsp; assistantId: SLUG_TO_ASSISTANT["markdown-messages"],
+
+&nbsp; &nbsp; onCreated: onRunCreated,
+
+&nbsp; });
+
+&nbsp; const bottomRef = useRef&lt;HTMLDivElement&gt;(null);
+
+&nbsp; const handleSubmit = (text: string) =&gt; {
+
+&nbsp; &nbsp; stream.submit({ messages: [{ type: "human" as const, content: text }] });
+
+&nbsp; };
+
+&nbsp; return (
+
+&nbsp; &nbsp; &lt;ChatContainer
+
+&nbsp; &nbsp; &nbsp; input={
+
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;ChatInput
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; onSubmit={handleSubmit}
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; disabled={stream.isLoading}
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; onNewThread={stream.messages.length &gt; 0 ? () =&gt; stream.switchThread(null) : undefined}
+
+&nbsp; &nbsp; &nbsp; &nbsp; /&gt;
+
+&nbsp; &nbsp; &nbsp; }
+
+&nbsp; &nbsp; &gt;
+
+&nbsp; &nbsp; &nbsp; {stream.messages.length === 0 &amp;&amp; &lt;PresetPrompts prompts={PRESETS} onSelect={handleSubmit} /&gt;}
+
+&nbsp; &nbsp; &nbsp; {stream.messages.map((msg) =&gt; {
+
+&nbsp; &nbsp; &nbsp; &nbsp; if (HumanMessage.isInstance(msg)) {
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return (
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;HumanBubble key={msg.id}&gt;
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;Markdown&gt;{msg.text}&lt;/Markdown&gt;
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/HumanBubble&gt;
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; );
+
+&nbsp; &nbsp; &nbsp; &nbsp; }
+
+&nbsp; &nbsp; &nbsp; &nbsp; if (AIMessage.isInstance(msg)) {
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return (
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;AIBubble key={msg.id}&gt;
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;Markdown&gt;{msg.text}&lt;/Markdown&gt;
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/AIBubble&gt;
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; );
+
+&nbsp; &nbsp; &nbsp; &nbsp; }
+
+&nbsp; &nbsp; &nbsp; &nbsp; return null;
+
+&nbsp; &nbsp; &nbsp; })}
+
+&nbsp; &nbsp; &nbsp; {stream.isLoading &amp;&amp; &lt;TypingIndicator /&gt;}
+
+&nbsp; &nbsp; &nbsp; &lt;div ref={bottomRef} /&gt;
+
+&nbsp; &nbsp; &lt;/ChatContainer&gt;
+
+&nbsp; );
+
+}</pre>
+
+<p>Il existe aussi des integrations avec des services UI&nbsp;comme CopilotKit</p>
+
+<p><a href="https://reference.langchain.com/javascript/langchain-react/index/useStream" target="_blank" rel="noopener noreferrer"><code>useStream</code></a> est UI-agnostic. Il est possible d'utiliser des services Chat pret a l'emploi qui evite de coder toute la logique soi-meme en React/Svelt ou autres.</p>
+
+<h4>⚙️ Usage Avancé</h4>
+
+<h4>1. Guardrails</h4>
+
+<p>Sécuriser les réponses de l'agent</p>
+
+<pre class="prettyprint linenums">import os
+
+from langchain.agents import create_agent
+
+from langchain_ollama import ChatOllama
+
+from langchain.agents.middleware import PIIMiddleware
+
+from langchain.tools import tool
+
+# Use a variable so we can validate cloud usage easily
+
+MODEL = os.getenv("OLLAMA_MODEL", "ollama:granite4.1:3b")
+
+# Quick environment validation when using a cloud model
+
+if ":cloud" in MODEL:
+
+&nbsp; &nbsp; api_key = os.getenv("OLLAMA_API_KEY")
+
+&nbsp; &nbsp; host = os.getenv("OLLAMA_HOST")
+
+&nbsp; &nbsp; if not api_key:
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("ERROR: Using a cloud Ollama model requires OLLAMA_API_KEY to be set.")
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("Set it with: export OLLAMA_API_KEY=\"your_key\"")
+
+&nbsp; &nbsp; &nbsp; &nbsp; sys.exit(1)
+
+&nbsp; &nbsp; if not host:
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("NOTE: OLLAMA_HOST not set; defaulting to https://api.ollama.com")
+
+&nbsp; &nbsp; &nbsp; &nbsp; os.environ["OLLAMA_HOST"] = "https://api.ollama.com"
+
+# Ollama
+
+model_ollama = ChatOllama(model=MODEL, temperature=0.2)
+
+@tool
+
+def email_tool(a: float, b: float) -&gt; float:
+
+&nbsp; &nbsp; """retourne un email d'entreprise"""
+
+&nbsp; &nbsp; return "team123@theworldcompany.org"
+
+agent = create_agent(
+
+&nbsp; &nbsp; model=model_ollama,
+
+&nbsp; &nbsp; tools=[email_tool],
+
+&nbsp; &nbsp; middleware=[
+
+&nbsp; &nbsp; &nbsp; &nbsp; # Redact emails in user input before sending to model
+
+&nbsp; &nbsp; &nbsp; &nbsp; PIIMiddleware(
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "email",
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; strategy="redact",
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; apply_to_input=True,
+
+&nbsp; &nbsp; &nbsp; &nbsp; ),
+
+&nbsp; &nbsp; &nbsp; &nbsp; # Mask credit cards in user input
+
+&nbsp; &nbsp; &nbsp; &nbsp; PIIMiddleware(
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "credit_card",
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; strategy="mask",
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; apply_to_input=True,
+
+&nbsp; &nbsp; &nbsp; &nbsp; ),
+
+&nbsp; &nbsp; &nbsp; &nbsp; # Block API keys - raise error if detected
+
+&nbsp; &nbsp; &nbsp; &nbsp; PIIMiddleware(
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "api_key",
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; detector=r"sk-[a-zA-Z0-9]{32}",
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; strategy="block",
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; apply_to_input=True,
+
+&nbsp; &nbsp; &nbsp; &nbsp; ),
+
+&nbsp; &nbsp; ],
+
+)
+
+# When user provides PII, it will be handled according to the strategy
+
+response = agent.invoke({
+
+&nbsp; &nbsp; "messages": [{"role": "user", "content": "Reply with the email of my team , or stephane.metairie@myworldcompany.org , note than my card is 5105-1051-0510-5100"}]
+
+})
+
+# Print the whole conversation
+
+for msg in response["messages"]:
+
+&nbsp; &nbsp; role = msg.type if hasattr(msg, "type") else msg.get("role", "unknown")
+
+&nbsp; &nbsp; content = msg.content if hasattr(msg, "content") else msg.get("content", "")
+
+&nbsp; &nbsp; print(f"[{role}]: {content}")
+
+&nbsp; &nbsp; print("---")</pre>
+
+<p> Le resultat retourné dans les messages</p>
+
+<pre class="prettyprint linenums">[human]: Reply with the email of my team , or [REDACTED_EMAIL] , note than my card is ****-****-****-5100
+
+---
+
+[ai]: 
+
+---
+
+[tool]: team123@theworldcompany.org
+
+---
+
+[ai]: Here’s the email for your team: **team123@theworldcompany.org**  
+
+*Note:* Your card number is displayed as ****-****-****-5100.</pre>
+
+<h4>2. Runtime</h4>
+
+<p>Configuration avancée du moteur d'exécution. Lié à LangGraph,&nbsp; <a href="https://reference.langchain.com/python/langchain/agents/factory/create_agent" target="_blank" rel="noopener noreferrer"><code>create_agent</code></a> expose l'objet <a href="https://reference.langchain.com/python/langgraph/runtime/Runtime" target="_blank" rel="noopener noreferrer"><code>Runtime</code></a> , celui-ci contient. (Extrait de la doc)</p>
+
+<pre class="prettyprint linenums">Context:          static information like user id, db connections, or other dependencies for an agent invocation
+
+Store:            a BaseStore instance used for long-term memory
+
+Stream writer:    an object used for streaming information via the "custom" stream mode
+
+Execution info:   identity and retry information for the current execution (thread ID, run ID, attempt number)
+
+Server info:      server-specific metadata when running on LangGraph Server (assistant ID, graph ID, authenticated user)</pre>
+
+<h4>3. Context</h4>
+
+<p>Optimisation du contexte envoyé au LLM </p>
+
+<h4>4. Model Context Protocol (MCP)</h4>
+
+<p>Protocole standardisé pour l'intégration d'outils</p>
+
+<h4>5. Human-in-the-loop (HITL)</h4>
+
+<p>Validation humaine des actions critiques</p>
+
+<h4>6. Retrieval (RAG - Retrieval-Augmented Generation)</h4>
+
+<p>Augmentation de la génération par recherche documentaire</p>
+
+<h4>7. Long-term Memory</h4>
+
+<p>Maintien d'informations persistantes entre les sessions</p>

@@ -1,0 +1,239 @@
+<h4>🔌 Middleware</h4>
+
+<p>Le middleware est le mécanisme central de personnalisation dans LangChain . Il permet d'intercepter, modifier ou étendre le comportement de l'agent à différentes étapes.</p>
+
+<p><br></p>
+
+<figure><img src="https://img-c.udemycdn.com/redactor/raw/article_lecture/2026-05-15_08-22-44-908f76f00046dee1a30ceb27b859b236.jpg" width="525" height="592"></figure>
+
+<p>Dans le cadre d'une utilisation en entreprise, il est necessaire d'utiliser les Middleware, il existe une liste préconstruite, en plus de la possibilité d'ajouter ses propres Custom Middleware.</p>
+
+<p><strong>Middleware</strong> Description</p>
+
+<p><strong>Summarization:</strong> Automatically summarize conversation history when approaching token limits.
+
+<strong>Human-in-the-loop:</strong> Pause execution for human approval of tool calls.
+
+<strong>Model call limit:</strong>&nbsp; Limit the number of model calls to prevent excessive costs.
+
+<strong>Tool call limit:</strong> Control tool execution by limiting call counts.
+
+<strong>Model fallback:</strong>&nbsp; Automatically fallback to alternative models when primary fails.
+
+<strong>PII detection:</strong> Detect and handle Personally Identifiable Information (PII).
+
+<strong>To-do list:</strong>&nbsp; Equip agents with task planning and tracking capabilities.
+
+<strong>LLM tool selector:</strong> Use an LLM to select relevant tools before calling main model.
+
+<strong>Tool retry:</strong>&nbsp; Automatically retry failed tool calls with exponential backoff.
+
+<strong>Model retry:</strong> Automatically retry failed model calls with exponential backoff.
+
+<strong>LLM tool emulator:</strong> Emulate tool execution using an LLM for testing purposes.
+
+<strong>Context editing:</strong> Manage conversation context by trimming or clearing tool uses.
+
+<strong>Shell tool:</strong>&nbsp; Expose a persistent shell session to agents for command execution.
+
+<strong>File search:</strong> Provide Glob and Grep search tools over filesystem files.
+
+<strong>Filesystem:</strong>&nbsp; Provide agents with a filesystem for storing context and long-term memories.
+
+<strong>Subagent:</strong>&nbsp; Add the ability to spawn subagents.
+
+</p>
+
+<h4>🎨 Frontend</h4>
+
+<p>Il est possible de créer des frontends interactifs sur les objets: <code>createAgent</code>. Tous les patterns sont possible, message, debug, HIT.</p>
+
+<h4><a href="https://docs.langchain.com/oss/python/langchain/frontend/overview#architecture" target="_blank" rel="noopener noreferrer">​</a>Architecture</h4>
+
+<p>Toujours la meme maniere de faire un backend streams fournit un flux avec l'objet <code>useStream</code> en mode "hook". </p>
+
+<p>Exemple d'une petite application React:</p>
+
+<p><br></p>
+
+<figure><img src="https://img-c.udemycdn.com/redactor/raw/article_lecture/2026-05-15_08-45-01-032362a127a067128d30fa9dab6b030d.jpg"></figure>
+
+<p>Code Agent.ts</p>
+
+<pre class="prettyprint linenums">class ContactInfo(BaseModel):
+
+import { createAgent } from "langchain";
+
+if (!process.env.ANTHROPIC_API_KEY) {
+
+&nbsp; throw new Error("ANTHROPIC_API_KEY is not set");
+
+}
+
+export const agent = createAgent({
+
+&nbsp; model: "anthropic:claude-haiku-4-5",
+
+});</pre>
+
+<p>Code Preview.tsx</p>
+
+<pre class="prettyprint linenums">import { useRef } from "react";
+
+import { useStream } from "@langchain/react";
+
+import { HumanMessage, AIMessage } from "langchain";
+
+import type { simpleAgent } from "./agent";
+
+import { AGENT_SERVER_URL, SLUG_TO_ASSISTANT } from "@/constants";
+
+import {
+
+  useTraceContext,
+
+  ChatContainer,
+
+  AIBubble,
+
+  HumanBubble,
+
+  ChatInput,
+
+  TypingIndicator,
+
+  PresetPrompts,
+
+  Markdown,
+
+} from "@/components/playground";
+
+const PRESETS = [
+
+  "Write a quick-start guide for building a REST API with Express.js",
+
+  "Compare Python and Rust in a table with pros and cons",
+
+  "Explain the merge sort algorithm with code examples",
+
+];
+
+export default function MarkdownMessagesChat() {
+
+  const { onRunCreated } = useTraceContext();
+
+  const stream = useStream&lt;typeof simpleAgent&gt;({
+
+    apiUrl: AGENT_SERVER_URL,
+
+    assistantId: SLUG_TO_ASSISTANT["markdown-messages"],
+
+    onCreated: onRunCreated,
+
+  });
+
+  const bottomRef = useRef&lt;HTMLDivElement&gt;(null);
+
+  const handleSubmit = (text: string) =&gt; {
+
+    stream.submit({ messages: [{ type: "human" as const, content: text }] });
+
+  };
+
+  return (
+
+    &lt;ChatContainer
+
+      input={
+
+        &lt;ChatInput
+
+          onSubmit={handleSubmit}
+
+          disabled={stream.isLoading}
+
+          onNewThread={stream.messages.length &gt; 0 ? () =&gt; stream.switchThread(null) : undefined}
+
+        /&gt;
+
+      }
+
+    &gt;
+
+      {stream.messages.length === 0 &amp;&amp; &lt;PresetPrompts prompts={PRESETS} onSelect={handleSubmit} /&gt;}
+
+      {stream.messages.map((msg) =&gt; {
+
+        if (HumanMessage.isInstance(msg)) {
+
+          return (
+
+            &lt;HumanBubble key={msg.id}&gt;
+
+              &lt;Markdown&gt;{msg.text}&lt;/Markdown&gt;
+
+            &lt;/HumanBubble&gt;
+
+          );
+
+        }
+
+        if (AIMessage.isInstance(msg)) {
+
+          return (
+
+            &lt;AIBubble key={msg.id}&gt;
+
+              &lt;Markdown&gt;{msg.text}&lt;/Markdown&gt;
+
+            &lt;/AIBubble&gt;
+
+          );
+
+        }
+
+        return null;
+
+      })}
+
+      {stream.isLoading &amp;&amp; &lt;TypingIndicator /&gt;}
+
+      &lt;div ref={bottomRef} /&gt;
+
+    &lt;/ChatContainer&gt;
+
+  );
+
+}</pre>
+
+<p><br></p>
+
+<h4>⚙️ Advanced Usage</h4>
+
+<h4>1. Guardrails</h4>
+
+<p>Sécuriser les réponses de l'agent </p>
+
+<h4>2. Runtime</h4>
+
+<p>Configuration avancée du moteur d'exécution </p>
+
+<h4>3. Context Engineering</h4>
+
+<p>Optimisation du contexte envoyé au LLM </p>
+
+<h4>4. Model Context Protocol (MCP)</h4>
+
+<p>Protocole standardisé pour l'intégration d'outils</p>
+
+<h4>5. Human-in-the-loop (HITL)</h4>
+
+<p>Validation humaine des actions critiques</p>
+
+<h4>6. Retrieval (RAG - Retrieval-Augmented Generation)</h4>
+
+<p>Augmentation de la génération par recherche documentaire</p>
+
+<h4>7. Long-term Memory</h4>
+
+<p>Maintien d'informations persistantes entre les sessions</p>
