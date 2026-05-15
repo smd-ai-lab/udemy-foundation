@@ -2,8 +2,7 @@
 
 <h4>Vue d'ensemble version 1.3+</h4>
 
-<p>LangChain est un framework pour construire des applications alimentées par des LLM. Il vous aide à assembler des
-    composants interopérables et des intégrations tierces pour simplifier le développement d’applications d’IA</p>
+<p>LangChain est un framework pour construire des applications alimentées par des LLM. Il vous aide à assembler des composants interopérables et des intégrations tierces pour simplifier le développement d’applications d’IA</p>
 
 <p>6 fonctions principales:</p>
 
@@ -13,8 +12,7 @@
 
 <p><strong>🔗 Chains:</strong></p>
 
-<p>Chains permet de lier des appels vers les Agents/LLMs, des&nbsp;Outils, le DAG, la gestion de la mémoire, et
-    l'evaluation.</p>
+<p>Chains permet de lier des appels vers les Agents/LLMs, des&nbsp;Outils, le DAG, la gestion de la mémoire, et l'evaluation.</p>
 
 <p><strong>📚 Data Augmented Generation:</strong></p>
 
@@ -34,17 +32,7 @@
 
 <p><strong>Philosophie</strong> :</p>
 
-<ul>
-    <li>
-        <p>✅ <strong>Prêt pour la production</strong></p>
-    </li>
-    <li>
-        <p>✅ <strong>Middleware modulaire</strong></p>
-    </li>
-    <li>
-        <p>✅ <strong>Déclaratif</strong></p>
-    </li>
-</ul>
+<ul><li><p>✅ <strong>Prêt pour la production</strong></p></li><li><p>✅ <strong>Middleware modulaire</strong></p></li><li><p>✅ <strong>Déclaratif</strong></p></li></ul>
 
 <h4>🚀 Get Started</h4>
 
@@ -78,23 +66,23 @@ from langchain_ollama import ChatOllama
 
 def get_weather(city: str) -&gt; str:
 
-    """Get weather for a given city."""
+&nbsp; &nbsp; """Get weather for a given city."""
 
-    return f"It's always sunny in {city}!"
+&nbsp; &nbsp; return f"It's always sunny in {city}!"
 
 agent = create_agent(
 
-    model=ChatOllama(model="granite4.1:3b", temperature=0),
+&nbsp; &nbsp; model=ChatOllama(model="granite4.1:3b", temperature=0),
 
-    tools=[get_weather],
+&nbsp; &nbsp; tools=[get_weather],
 
-    system_prompt="You are a helpful assistant",
+&nbsp; &nbsp; system_prompt="You are a helpful assistant",
 
 )
 
 result = agent.invoke(
 
-    {"messages": [{"role": "user", "content": "What's the weather in San Francisco?"}]}
+&nbsp; &nbsp; {"messages": [{"role": "user", "content": "What's the weather in San Francisco?"}]}
 
 )
 
@@ -114,33 +102,17 @@ print(result)</pre>
 
 agent = create_agent(
 
-    model="openai:gpt-4o-mini",
+&nbsp; &nbsp; model="openai:gpt-4o-mini",
 
-    tools=[lire_email, envoyer_email, rechercher_web],
+&nbsp; &nbsp; tools=[lire_email, envoyer_email, rechercher_web],
 
-    system_prompt="Vous êtes un assistant professionnel.",
+&nbsp; &nbsp; system_prompt="Vous êtes un assistant professionnel.",
 
 )</pre>
 
 <p>L'agent herite de LangGraph et bénéficie de :</p>
 
-<ul>
-    <li>
-        <p>Model static ou dynamic</p>
-    </li>
-    <li>
-        <p>Persistance des conversations</p>
-    </li>
-    <li>
-        <p>Streaming temps réel</p>
-    </li>
-    <li>
-        <p>Mode "Human-in-the-loop"</p>
-    </li>
-    <li>
-        <p>Tools et Middleware</p>
-    </li>
-</ul>
+<ul><li><p>Model static ou dynamic</p></li><li><p>Persistance des conversations</p></li><li><p>Streaming temps réel</p></li><li><p>Mode "Human-in-the-loop"</p></li><li><p>Tools et Middleware</p></li></ul>
 
 <h4>2. Models</h4>
 
@@ -178,23 +150,23 @@ MODEL = os.getenv("OLLAMA_MODEL", "ollama:granite4.1:3b")
 
 if ":cloud" in MODEL:
 
-    api_key = os.getenv("OLLAMA_API_KEY")
+&nbsp; &nbsp; api_key = os.getenv("OLLAMA_API_KEY")
 
-    host = os.getenv("OLLAMA_HOST")
+&nbsp; &nbsp; host = os.getenv("OLLAMA_HOST")
 
-    if not api_key:
+&nbsp; &nbsp; if not api_key:
 
-        print("ERROR: Using a cloud Ollama model requires OLLAMA_API_KEY to be set.")
+&nbsp; &nbsp; &nbsp; &nbsp; print("ERROR: Using a cloud Ollama model requires OLLAMA_API_KEY to be set.")
 
-        print("Set it with: export OLLAMA_API_KEY=\"your_key\"")
+&nbsp; &nbsp; &nbsp; &nbsp; print("Set it with: export OLLAMA_API_KEY=\"your_key\"")
 
-        sys.exit(1)
+&nbsp; &nbsp; &nbsp; &nbsp; sys.exit(1)
 
-    if not host:
+&nbsp; &nbsp; if not host:
 
-        print("NOTE: OLLAMA_HOST not set; defaulting to https://api.ollama.com")
+&nbsp; &nbsp; &nbsp; &nbsp; print("NOTE: OLLAMA_HOST not set; defaulting to https://api.ollama.com")
 
-        os.environ["OLLAMA_HOST"] = "https://api.ollama.com"
+&nbsp; &nbsp; &nbsp; &nbsp; os.environ["OLLAMA_HOST"] = "https://api.ollama.com"
 
 # Ollama
 
@@ -254,6 +226,122 @@ MODEL = os.getenv("OLLAMA_MODEL", "granite4.1:3b")
 
 if ":cloud" in MODEL:
 
+&nbsp; &nbsp; api_key = os.getenv("OLLAMA_API_KEY")
+
+&nbsp; &nbsp; host = os.getenv("OLLAMA_HOST")
+
+&nbsp; &nbsp; if not api_key:
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("ERROR: Using a cloud Ollama model requires OLLAMA_API_KEY to be set.")
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("Set it with: export OLLAMA_API_KEY=\"your_key\"")
+
+&nbsp; &nbsp; &nbsp; &nbsp; sys.exit(1)
+
+&nbsp; &nbsp; if not host:
+
+&nbsp; &nbsp; &nbsp; &nbsp; print("NOTE: OLLAMA_HOST not set; defaulting to https://api.ollama.com")
+
+&nbsp; &nbsp; &nbsp; &nbsp; os.environ["OLLAMA_HOST"] = "https://api.ollama.com"
+
+@tool
+
+def addition(a: float, b: float) -&gt; float:
+
+&nbsp; &nbsp; """Additionne deux nombres et retourne le résultat."""
+
+&nbsp; &nbsp; return a + b
+
+tools = [addition]
+
+tools_by_name = {tool.name: tool for tool in tools}
+
+# ChatOllama avec outils LangChain
+
+model_ollama = ChatOllama(model=MODEL, temperature=0)
+
+model_with_tools = model_ollama.bind_tools(tools)
+
+messages = [
+
+&nbsp; &nbsp; SystemMessage(content="Tu es un assistant utile. Pour les additions, utilise l'outil addition."),
+
+&nbsp; &nbsp; HumanMessage(content="Combien font 123.5 + 456.7 ?")
+
+]
+
+# 1. Le modèle décide s'il doit appeler un outil.
+
+ai_message = model_with_tools.invoke(messages)
+
+messages.append(ai_message)
+
+print("=== Appels d'outils demandés par le modèle ===")
+
+print(ai_message.tool_calls)
+
+print()
+
+if not ai_message.tool_calls:
+
+&nbsp; &nbsp; print("Le modèle n'a pas demandé d'appel d'outil.")
+
+&nbsp; &nbsp; print("Réponse directe du modèle :")
+
+&nbsp; &nbsp; print(ai_message.content)
+
+&nbsp; &nbsp; sys.exit(0)
+
+# 2. Python exécute les outils demandés, puis ajoute les résultats à la conversation.
+
+for tool_call in ai_message.tool_calls:
+
+&nbsp; &nbsp; selected_tool = tools_by_name[tool_call["name"]]
+
+&nbsp; &nbsp; tool_result = selected_tool.invoke(tool_call["args"])
+
+&nbsp; &nbsp; messages.append(
+
+&nbsp; &nbsp; &nbsp; &nbsp; ToolMessage(
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; content=str(tool_result),
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; tool_call_id=tool_call["id"],
+
+&nbsp; &nbsp; &nbsp; &nbsp; )
+
+&nbsp; &nbsp; )
+
+# 3. Le modèle reçoit le résultat de l'outil et répond à l'utilisateur.
+
+final_response = model_with_tools.invoke(messages)
+
+print("=== Réponse finale ===")
+
+print(final_response.content)</pre>
+
+<h4>5. Short-term Memory</h4>
+
+<p>Persistance automatique de l'état des conversations :</p>
+
+<p>python</p>
+
+<pre class="prettyprint linenums">import os
+
+from langchain.agents import create_agent
+
+from langchain_ollama import ChatOllama
+
+from langgraph.checkpoint.memory import InMemorySaver  
+
+# Use a variable so we can validate cloud usage easily
+
+MODEL = os.getenv("OLLAMA_MODEL", "ollama:granite4.1:3b")
+
+# Quick environment validation when using a cloud model
+
+if ":cloud" in MODEL:
+
     api_key = os.getenv("OLLAMA_API_KEY")
 
     host = os.getenv("OLLAMA_HOST")
@@ -272,101 +360,19 @@ if ":cloud" in MODEL:
 
         os.environ["OLLAMA_HOST"] = "https://api.ollama.com"
 
-@tool
+# Ollama
 
-def addition(a: float, b: float) -&gt; float:
-
-    """Additionne deux nombres et retourne le résultat."""
-
-    return a + b
-
-tools = [addition]
-
-tools_by_name = {tool.name: tool for tool in tools}
-
-# ChatOllama avec outils LangChain
-
-model_ollama = ChatOllama(model=MODEL, temperature=0)
-
-model_with_tools = model_ollama.bind_tools(tools)
-
-messages = [
-
-    SystemMessage(content="Tu es un assistant utile. Pour les additions, utilise l'outil addition."),
-
-    HumanMessage(content="Combien font 123.5 + 456.7 ?")
-
-]
-
-# 1. Le modèle décide s'il doit appeler un outil.
-
-ai_message = model_with_tools.invoke(messages)
-
-messages.append(ai_message)
-
-print("=== Appels d'outils demandés par le modèle ===")
-
-print(ai_message.tool_calls)
-
-print()
-
-if not ai_message.tool_calls:
-
-    print("Le modèle n'a pas demandé d'appel d'outil.")
-
-    print("Réponse directe du modèle :")
-
-    print(ai_message.content)
-
-    sys.exit(0)
-
-# 2. Python exécute les outils demandés, puis ajoute les résultats à la conversation.
-
-for tool_call in ai_message.tool_calls:
-
-    selected_tool = tools_by_name[tool_call["name"]]
-
-    tool_result = selected_tool.invoke(tool_call["args"])
-
-    messages.append(
-
-        ToolMessage(
-
-            content=str(tool_result),
-
-            tool_call_id=tool_call["id"],
-
-        )
-
-    )
-
-# 3. Le modèle reçoit le résultat de l'outil et répond à l'utilisateur.
-
-final_response = model_with_tools.invoke(messages)
-
-print("=== Réponse finale ===")
-
-print(final_response.content)</pre>
-
-<h4>5. Short-term Memory</h4>
-
-<p>Persistance automatique de l'état des conversations :</p>
-
-<p>python</p>
-
-<pre class="prettyprint linenums">from langgraph.checkpoint import MemorySaver
+model_ollama = ChatOllama(model=MODEL, temperature=0.2)
 
 # Création du sauvegarde mémoire
 
-checkpointer = MemorySaver()
+checkpointer = InMemorySaver()
 
 agent = create_agent(
 
-    model=model,
+  model=model_ollama,
 
-    tools=outils,
-
-    checkpointer=checkpointer  # Active la persistance
+  checkpointer=checkpointer # Active la persistance
 
 )
 
@@ -376,9 +382,9 @@ config = {"configurable": {"thread_id": "utilisateur-123"}}
 
 reponse = agent.invoke(
 
-    {"messages": [{"role": "user", "content": "Je m'appelle Marie"}]},
+  {"messages": [{"role": "user", "content": "Je m'appelle utilisateur-123"}]},
 
-    config=config
+  config=config
 
 )
 
@@ -386,13 +392,23 @@ reponse = agent.invoke(
 
 reponse = agent.invoke(
 
-    {"messages": [{"role": "user", "content": "Quel est mon nom ?"}]},
+  {"messages": [{"role": "user", "content": "Quel est mon nom ?"}]},
 
-    config=config
+  config=config
 
 )
 
-# Réponse : "Vous vous appelez Marie"</pre>
+# Print the whole conversation
+
+for msg in reponse["messages"]:
+
+    role = msg.type if hasattr(msg, "type") else msg.get("role", "unknown")
+
+    content = msg.content if hasattr(msg, "content") else msg.get("content", "")
+
+    print(f"[{role}]: {content}")
+
+    print("---")</pre>
 
 <h4>6. Streaming (Flux temps réel)</h4>
 
@@ -404,23 +420,23 @@ reponse = agent.invoke(
 
 for chunk in agent.stream({
 
-    "messages": [{"role": "user", "content": "Racontez une histoire de 100 mots"}]
+&nbsp; &nbsp; "messages": [{"role": "user", "content": "Racontez une histoire de 100 mots"}]
 
 }):
 
-    if "content" in chunk:
+&nbsp; &nbsp; if "content" in chunk:
 
-        print(chunk["content"], end="", flush=True)
+&nbsp; &nbsp; &nbsp; &nbsp; print(chunk["content"], end="", flush=True)
 
 # Streaming avec événements
 
 async for event in agent.astream_events({
 
-    "messages": [{"role": "user", "content": "Analysez ce texte"}]
+&nbsp; &nbsp; "messages": [{"role": "user", "content": "Analysez ce texte"}]
 
 }, version="v2"):
 
-    print(f"Événement: {event['event']}")</pre>
+&nbsp; &nbsp; print(f"Événement: {event['event']}")</pre>
 
 <h4>7. Structured Output (Sortie Structurée)</h4>
 
@@ -436,13 +452,13 @@ from langchain.output_parsers import PydanticOutputParser
 
 class Article(BaseModel):
 
-    titre: str
+&nbsp; &nbsp; titre: str
 
-    auteur: str
+&nbsp; &nbsp; auteur: str
 
-    mots_cles: List[str]
+&nbsp; &nbsp; mots_cles: List[str]
 
-    resume: str
+&nbsp; &nbsp; resume: str
 
 parser = PydanticOutputParser(pydantic_object=Article)
 
@@ -450,9 +466,9 @@ parser = PydanticOutputParser(pydantic_object=Article)
 
 agent = create_agent(
 
-    model=model,
+&nbsp; &nbsp; model=model,
 
-    response_format=Article  # Déclare le format attendu
+&nbsp; &nbsp; response_format=Article&nbsp; # Déclare le format attendu
 
 )
 
@@ -478,8 +494,7 @@ print(article.titre, article.mots_cles)</pre>
 
 <h4>Vue d'ensemble</h4>
 
-<p>Le middleware est le mécanisme central de personnalisation dans LangChain v1.0. Il permet d'intercepter, modifier ou
-    étendre le comportement de l'agent à différentes étapes.</p>
+<p>Le middleware est le mécanisme central de personnalisation dans LangChain v1.0. Il permet d'intercepter, modifier ou étendre le comportement de l'agent à différentes étapes.</p>
 
 <p>python</p>
 
@@ -489,19 +504,19 @@ from typing import Any, Dict
 
 class MonMiddleware(Middleware):
 
-    async def before_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
+&nbsp; &nbsp; async def before_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
 
-        print("Avant l'exécution de l'agent")
+&nbsp; &nbsp; &nbsp; &nbsp; print("Avant l'exécution de l'agent")
 
-        return state
+&nbsp; &nbsp; &nbsp; &nbsp; return state
 
-    
+&nbsp; &nbsp; 
 
-    async def after_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
+&nbsp; &nbsp; async def after_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
 
-        print("Après l'exécution de l'agent")
+&nbsp; &nbsp; &nbsp; &nbsp; print("Après l'exécution de l'agent")
 
-        return state</pre>
+&nbsp; &nbsp; &nbsp; &nbsp; return state</pre>
 
 <h4>Middleware Préconstruit</h4>
 
@@ -511,69 +526,69 @@ class MonMiddleware(Middleware):
 
 <pre class="prettyprint linenums">from langchain.agents.middleware import (
 
-    SummarizationMiddleware,
+&nbsp; &nbsp; SummarizationMiddleware,
 
-    HumanInTheLoopMiddleware,
+&nbsp; &nbsp; HumanInTheLoopMiddleware,
 
-    ToolRetryMiddleware,
+&nbsp; &nbsp; ToolRetryMiddleware,
 
-    RateLimitMiddleware
+&nbsp; &nbsp; RateLimitMiddleware
 
 )
 
 agent = create_agent(
 
-    model=model,
+&nbsp; &nbsp; model=model,
 
-    tools=outils,
+&nbsp; &nbsp; tools=outils,
 
-    middleware=[
+&nbsp; &nbsp; middleware=[
 
-        # 1. Résumé automatique des longues conversations
+&nbsp; &nbsp; &nbsp; &nbsp; # 1. Résumé automatique des longues conversations
 
-        SummarizationMiddleware(
+&nbsp; &nbsp; &nbsp; &nbsp; SummarizationMiddleware(
 
-            model="gpt-4o-mini",
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; model="gpt-4o-mini",
 
-            trigger={"tokens": 1000}  # Déclenche à 1000 tokens
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; trigger={"tokens": 1000}&nbsp; # Déclenche à 1000 tokens
 
-        ),
+&nbsp; &nbsp; &nbsp; &nbsp; ),
 
-        
+&nbsp; &nbsp; &nbsp; &nbsp; 
 
-        # 2. Validation humaine avant actions sensibles
+&nbsp; &nbsp; &nbsp; &nbsp; # 2. Validation humaine avant actions sensibles
 
-        HumanInTheLoopMiddleware(
+&nbsp; &nbsp; &nbsp; &nbsp; HumanInTheLoopMiddleware(
 
-            interrupt_on={"envoyer_email": {"approval_required": True}}
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; interrupt_on={"envoyer_email": {"approval_required": True}}
 
-        ),
+&nbsp; &nbsp; &nbsp; &nbsp; ),
 
-        
+&nbsp; &nbsp; &nbsp; &nbsp; 
 
-        # 3. Réessai automatique en cas d'échec
+&nbsp; &nbsp; &nbsp; &nbsp; # 3. Réessai automatique en cas d'échec
 
-        ToolRetryMiddleware(
+&nbsp; &nbsp; &nbsp; &nbsp; ToolRetryMiddleware(
 
-            max_retries=3,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; max_retries=3,
 
-            backoff_factor=2.0
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; backoff_factor=2.0
 
-        ),
+&nbsp; &nbsp; &nbsp; &nbsp; ),
 
-        
+&nbsp; &nbsp; &nbsp; &nbsp; 
 
-        # 4. Limitation du taux de requêtes
+&nbsp; &nbsp; &nbsp; &nbsp; # 4. Limitation du taux de requêtes
 
-        RateLimitMiddleware(
+&nbsp; &nbsp; &nbsp; &nbsp; RateLimitMiddleware(
 
-            requests_per_minute=60,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; requests_per_minute=60,
 
-            requests_per_day=1000
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; requests_per_day=1000
 
-        )
+&nbsp; &nbsp; &nbsp; &nbsp; )
 
-    ]
+&nbsp; &nbsp; ]
 
 )</pre>
 
@@ -591,51 +606,51 @@ from typing import Any, Dict, Optional
 
 class LoggingMiddleware(Middleware):
 
-    def __init__(self, log_file: str = "agent.log"):
+&nbsp; &nbsp; def __init__(self, log_file: str = "agent.log"):
 
-        self.log_file = log_file
+&nbsp; &nbsp; &nbsp; &nbsp; self.log_file = log_file
 
-    
+&nbsp; &nbsp; 
 
-    async def before_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
+&nbsp; &nbsp; async def before_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
 
-        self.start_time = time.time()
+&nbsp; &nbsp; &nbsp; &nbsp; self.start_time = time.time()
 
-        user_message = state["messages"][-1]["content"]
+&nbsp; &nbsp; &nbsp; &nbsp; user_message = state["messages"][-1]["content"]
 
-        self._log(f"Question utilisateur: {user_message}")
+&nbsp; &nbsp; &nbsp; &nbsp; self._log(f"Question utilisateur: {user_message}")
 
-        return state
+&nbsp; &nbsp; &nbsp; &nbsp; return state
 
-    
+&nbsp; &nbsp; 
 
-    async def after_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
+&nbsp; &nbsp; async def after_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
 
-        duration = time.time() - self.start_time
+&nbsp; &nbsp; &nbsp; &nbsp; duration = time.time() - self.start_time
 
-        response = state["messages"][-1]["content"]
+&nbsp; &nbsp; &nbsp; &nbsp; response = state["messages"][-1]["content"]
 
-        self._log(f"Réponse (en {duration:.2f}s): {response[:100]}...")
+&nbsp; &nbsp; &nbsp; &nbsp; self._log(f"Réponse (en {duration:.2f}s): {response[:100]}...")
 
-        return state
+&nbsp; &nbsp; &nbsp; &nbsp; return state
 
-    
+&nbsp; &nbsp; 
 
-    def _log(self, message: str):
+&nbsp; &nbsp; def _log(self, message: str):
 
-        with open(self.log_file, "a") as f:
+&nbsp; &nbsp; &nbsp; &nbsp; with open(self.log_file, "a") as f:
 
-            f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
 
 # Utilisation
 
 agent = create_agent(
 
-    model=model,
+&nbsp; &nbsp; model=model,
 
-    tools=outils,
+&nbsp; &nbsp; tools=outils,
 
-    middleware=[LoggingMiddleware()]
+&nbsp; &nbsp; middleware=[LoggingMiddleware()]
 
 )</pre>
 
@@ -657,23 +672,23 @@ app = FastAPI()
 
 class Question(BaseModel):
 
-    texte: str
+&nbsp; &nbsp; texte: str
 
-    thread_id: str
+&nbsp; &nbsp; thread_id: str
 
 @app.post("/chat")
 
 async def chat(question: Question):
 
-    response = agent.invoke(
+&nbsp; &nbsp; response = agent.invoke(
 
-        {"messages": [{"role": "user", "content": question.texte}]},
+&nbsp; &nbsp; &nbsp; &nbsp; {"messages": [{"role": "user", "content": question.texte}]},
 
-        config={"configurable": {"thread_id": question.thread_id}}
+&nbsp; &nbsp; &nbsp; &nbsp; config={"configurable": {"thread_id": question.thread_id}}
 
-    )
+&nbsp; &nbsp; )
 
-    return {"reponse": response["content"]}</pre>
+&nbsp; &nbsp; return {"reponse": response["content"]}</pre>
 
 <p><strong>Intégration React</strong> (exemple d'appel) :</p>
 
@@ -683,11 +698,11 @@ async def chat(question: Question):
 
 const response = await fetch("/chat", {
 
-  method: "POST",
+&nbsp; method: "POST",
 
-  headers: { "Content-Type": "application/json" },
+&nbsp; headers: { "Content-Type": "application/json" },
 
-  body: JSON.stringify({ texte: message, thread_id: sessionId })
+&nbsp; body: JSON.stringify({ texte: message, thread_id: sessionId })
 
 });
 
@@ -705,31 +720,31 @@ const data = await response.json();</pre>
 
 def verification_securite(messages: list) -&gt; bool:
 
-    """Vérifie si le message est approprié"""
+&nbsp; &nbsp; """Vérifie si le message est approprié"""
 
-    interdit = ["mots", "interdits", "sensibles"]
+&nbsp; &nbsp; interdit = ["mots", "interdits", "sensibles"]
 
-    dernier_message = messages[-1]["content"].lower()
+&nbsp; &nbsp; dernier_message = messages[-1]["content"].lower()
 
-    return not any(mot in dernier_message for mot in interdit)
+&nbsp; &nbsp; return not any(mot in dernier_message for mot in interdit)
 
 agent = create_agent(
 
-    model=model,
+&nbsp; &nbsp; model=model,
 
-    middleware=[
+&nbsp; &nbsp; middleware=[
 
-        GuardrailMiddleware(
+&nbsp; &nbsp; &nbsp; &nbsp; GuardrailMiddleware(
 
-            check=verification_securite,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; check=verification_securite,
 
-            on_violation="block",  # ou "warn", "override"
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; on_violation="block",&nbsp; # ou "warn", "override"
 
-            fallback_response="Je ne peux pas répondre à cette question."
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; fallback_response="Je ne peux pas répondre à cette question."
 
-        )
+&nbsp; &nbsp; &nbsp; &nbsp; )
 
-    ]
+&nbsp; &nbsp; ]
 
 )</pre>
 
@@ -745,27 +760,27 @@ from langgraph.runtime import RuntimeConfig
 
 config = RuntimeConfig(
 
-    max_iterations=10,           # Maximum de tours agent
+&nbsp; &nbsp; max_iterations=10,&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# Maximum de tours agent
 
-    timeout_seconds=30,          # Timeout global
+&nbsp; &nbsp; timeout_seconds=30,&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # Timeout global
 
-    retry_policy={
+&nbsp; &nbsp; retry_policy={
 
-        "max_attempts": 3,
+&nbsp; &nbsp; &nbsp; &nbsp; "max_attempts": 3,
 
-        "delay_seconds": 1
+&nbsp; &nbsp; &nbsp; &nbsp; "delay_seconds": 1
 
-    }
+&nbsp; &nbsp; }
 
 )
 
 agent = create_agent(
 
-    model=model,
+&nbsp; &nbsp; model=model,
 
-    tools=outils,
+&nbsp; &nbsp; tools=outils,
 
-    runtime_config=config
+&nbsp; &nbsp; runtime_config=config
 
 )</pre>
 
@@ -779,21 +794,21 @@ agent = create_agent(
 
 agent = create_agent(
 
-    model=model,
+&nbsp; &nbsp; model=model,
 
-    middleware=[
+&nbsp; &nbsp; middleware=[
 
-        ContextWindowMiddleware(
+&nbsp; &nbsp; &nbsp; &nbsp; ContextWindowMiddleware(
 
-            max_tokens=4000,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; max_tokens=4000,
 
-            strategy="summarize",
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; strategy="summarize",
 
-            summarization_model="gpt-3.5-turbo"
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; summarization_model="gpt-3.5-turbo"
 
-        )
+&nbsp; &nbsp; &nbsp; &nbsp; )
 
-    ]
+&nbsp; &nbsp; ]
 
 )
 
@@ -801,11 +816,11 @@ agent = create_agent(
 
 agent.set_context({
 
-    "user_preferences": {"language": "fr", "style": "formal"},
+&nbsp; &nbsp; "user_preferences": {"language": "fr", "style": "formal"},
 
-    "retrieved_documents": [...],
+&nbsp; &nbsp; "retrieved_documents": [...],
 
-    "conversation_summary": "L'utilisateur demande des informations sur..."
+&nbsp; &nbsp; "conversation_summary": "L'utilisateur demande des informations sur..."
 
 })</pre>
 
@@ -825,9 +840,9 @@ server = Server("mon-serveur-llm")
 
 async def base_connaissances(requete: str) -&gt; str:
 
-    """Interroge la base de connaissances interne"""
+&nbsp; &nbsp; """Interroge la base de connaissances interne"""
 
-    return await rechercher_vecteurs(requete)
+&nbsp; &nbsp; return await rechercher_vecteurs(requete)
 
 # Connexion dans LangChain
 
@@ -851,39 +866,39 @@ checkpointer = PostgresSaver.from_conn_string("postgresql://user:pass@localhost/
 
 agent = create_agent(
 
-    model=model,
+&nbsp; &nbsp; model=model,
 
-    tools=[envoyer_paiement, supprimer_fichier, envoyer_email],
+&nbsp; &nbsp; tools=[envoyer_paiement, supprimer_fichier, envoyer_email],
 
-    middleware=[
+&nbsp; &nbsp; middleware=[
 
-        HumanInTheLoopMiddleware(
+&nbsp; &nbsp; &nbsp; &nbsp; HumanInTheLoopMiddleware(
 
-            interrupt_on={
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; interrupt_on={
 
-                "envoyer_paiement": {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "envoyer_paiement": {
 
-                    "always": True,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "always": True,
 
-                    "require_comment": True
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "require_comment": True
 
-                },
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; },
 
-                "supprimer_fichier": {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "supprimer_fichier": {
 
-                    "check_paths": ["/important/*"],
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "check_paths": ["/important/*"],
 
-                    "approval_message": "Confirmez-vous la suppression ?"
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "approval_message": "Confirmez-vous la suppression ?"
 
-                }
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
 
-            }
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
 
-        )
+&nbsp; &nbsp; &nbsp; &nbsp; )
 
-    ],
+&nbsp; &nbsp; ],
 
-    checkpointer=checkpointer
+&nbsp; &nbsp; checkpointer=checkpointer
 
 )
 
@@ -915,11 +930,11 @@ chunks = splitter.split_documents(docs)
 
 vectorstore = Chroma.from_documents(
 
-    chunks, 
+&nbsp; &nbsp; chunks, 
 
-    OpenAIEmbeddings(),
+&nbsp; &nbsp; OpenAIEmbeddings(),
 
-    collection_name="ma_base"
+&nbsp; &nbsp; collection_name="ma_base"
 
 )
 
@@ -929,23 +944,23 @@ from langchain.agents.middleware import RetrievalMiddleware
 
 agent = create_agent(
 
-    model=model,
+&nbsp; &nbsp; model=model,
 
-    middleware=[
+&nbsp; &nbsp; middleware=[
 
-        RetrievalMiddleware(
+&nbsp; &nbsp; &nbsp; &nbsp; RetrievalMiddleware(
 
-            vectorstore=vectorstore,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; vectorstore=vectorstore,
 
-            k=5,  # Récupère les 5 documents les plus pertinents
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; k=5,&nbsp; # Récupère les 5 documents les plus pertinents
 
-            strategy="relevance_score",
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; strategy="relevance_score",
 
-            threshold=0.7
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; threshold=0.7
 
-        )
+&nbsp; &nbsp; &nbsp; &nbsp; )
 
-    ]
+&nbsp; &nbsp; ]
 
 )</pre>
 
@@ -965,25 +980,25 @@ store = RedisStore(host="localhost", port=6379)
 
 agent = create_agent(
 
-    model=model,
+&nbsp; &nbsp; model=model,
 
-    middleware=[
+&nbsp; &nbsp; middleware=[
 
-        LongTermMemoryMiddleware(
+&nbsp; &nbsp; &nbsp; &nbsp; LongTermMemoryMiddleware(
 
-            store=store,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; store=store,
 
-            memory_types=["user_preferences", "facts", "history"],
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; memory_types=["user_preferences", "facts", "history"],
 
-            auto_save=True,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; auto_save=True,
 
-            retrieval_strategy="semantic",  # ou "recency", "importance"
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; retrieval_strategy="semantic",&nbsp; # ou "recency", "importance"
 
-            max_memories=50
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; max_memories=50
 
-        )
+&nbsp; &nbsp; &nbsp; &nbsp; )
 
-    ]
+&nbsp; &nbsp; ]
 
 )
 
@@ -991,7 +1006,7 @@ agent = create_agent(
 
 agent.invoke({
 
-    "messages": [{"role": "user", "content": "Je préfère les réponses en français"}]
+&nbsp; &nbsp; "messages": [{"role": "user", "content": "Je préfère les réponses en français"}]
 
 }, config={"configurable": {"user_id": "alice@email.com"}})
 
@@ -999,7 +1014,7 @@ agent.invoke({
 
 agent.invoke({
 
-    "messages": [{"role": "user", "content": "Dans quelle langue dois-je répondre ?"}]
+&nbsp; &nbsp; "messages": [{"role": "user", "content": "Dans quelle langue dois-je répondre ?"}]
 
 }, config={"configurable": {"user_id": "alice@email.com"}})
 
@@ -1029,7 +1044,7 @@ from langsmith.run_helpers import traceable
 
 def tester_agent(question: str):
 
-    return agent.invoke({"messages": [{"role": "user", "content": question}]})
+&nbsp; &nbsp; return agent.invoke({"messages": [{"role": "user", "content": question}]})
 
 # Interface LangSmith Studio (Web UI)
 
@@ -1069,17 +1084,17 @@ from langchain_agent_ui import ChatInterface, AgentConfig
 
 ui = ChatInterface(
 
-    agent_config=AgentConfig(
+&nbsp; &nbsp; agent_config=AgentConfig(
 
-        agent=agent,
+&nbsp; &nbsp; &nbsp; &nbsp; agent=agent,
 
-        title="Mon Assistant IA",
+&nbsp; &nbsp; &nbsp; &nbsp; title="Mon Assistant IA",
 
-        theme="dark",
+&nbsp; &nbsp; &nbsp; &nbsp; theme="dark",
 
-        features=["file_upload", "voice_input", "history"]
+&nbsp; &nbsp; &nbsp; &nbsp; features=["file_upload", "voice_input", "history"]
 
-    )
+&nbsp; &nbsp; )
 
 )
 
@@ -1103,11 +1118,11 @@ langsmith deploy init
 
 langsmith deploy push \
 
-  --project mon-projet \
+&nbsp; --project mon-projet \
 
-  --environment production \
+&nbsp; --environment production \
 
-  --region eu-west-1</pre>
+&nbsp; --region eu-west-1</pre>
 
 <p><strong>Fichier de configuration (</strong><code><strong>langsmith.yaml</strong></code><strong>)</strong> :</p>
 
@@ -1119,29 +1134,29 @@ version: 1.0.0
 
 agent:
 
-  entrypoint: src/agent.py:create_app
+&nbsp; entrypoint: src/agent.py:create_app
 
-  model: openai:gpt-4o-mini
+&nbsp; model: openai:gpt-4o-mini
 
-  tools:
+&nbsp; tools:
 
-    - src.tools.database
+&nbsp; &nbsp; - src.tools.database
 
-    - src.tools.api
+&nbsp; &nbsp; - src.tools.api
 
 scaling:
 
-  min_replicas: 2
+&nbsp; min_replicas: 2
 
-  max_replicas: 10
+&nbsp; max_replicas: 10
 
-  target_cpu_utilization: 70
+&nbsp; target_cpu_utilization: 70
 
 resources:
 
-  memory: 2Gi
+&nbsp; memory: 2Gi
 
-  cpu: 1</pre>
+&nbsp; cpu: 1</pre>
 
 <h4>Observabilité</h4>
 
@@ -1173,27 +1188,27 @@ from langsmith.dashboard import MetricsDashboard
 
 dashboard = MetricsDashboard(
 
-    project="mon-agent-production",
+&nbsp; &nbsp; project="mon-agent-production",
 
-    metrics=[
+&nbsp; &nbsp; metrics=[
 
-        "response_time_p95",
+&nbsp; &nbsp; &nbsp; &nbsp; "response_time_p95",
 
-        "success_rate",
+&nbsp; &nbsp; &nbsp; &nbsp; "success_rate",
 
-        "cost_per_user",
+&nbsp; &nbsp; &nbsp; &nbsp; "cost_per_user",
 
-        "tool_usage_frequency"
+&nbsp; &nbsp; &nbsp; &nbsp; "tool_usage_frequency"
 
-    ],
+&nbsp; &nbsp; ],
 
-    alert_rules={
+&nbsp; &nbsp; alert_rules={
 
-        "error_rate": {"&gt;": 0.05, "action": "email"},
+&nbsp; &nbsp; &nbsp; &nbsp; "error_rate": {"&gt;": 0.05, "action": "email"},
 
-        "cost_per_day": {"&gt;": 100, "action": "slack"}
+&nbsp; &nbsp; &nbsp; &nbsp; "cost_per_day": {"&gt;": 100, "action": "slack"}
 
-    }
+&nbsp; &nbsp; }
 
 )</pre>
 
@@ -1205,18 +1220,18 @@ dashboard = MetricsDashboard(
 
 client.run_analytics("""
 
-    SELECT 
+&nbsp; &nbsp; SELECT 
 
-        date_trunc('hour', timestamp) as hour,
+&nbsp; &nbsp; &nbsp; &nbsp; date_trunc('hour', timestamp) as hour,
 
-        AVG(latency_ms) as avg_latency,
+&nbsp; &nbsp; &nbsp; &nbsp; AVG(latency_ms) as avg_latency,
 
-        COUNT(CASE WHEN error THEN 1 END) / COUNT(*) as error_rate
+&nbsp; &nbsp; &nbsp; &nbsp; COUNT(CASE WHEN error THEN 1 END) / COUNT(*) as error_rate
 
-    FROM traces
+&nbsp; &nbsp; FROM traces
 
-    WHERE project = 'mon-agent-production'
+&nbsp; &nbsp; WHERE project = 'mon-agent-production'
 
-    GROUP BY hour
+&nbsp; &nbsp; GROUP BY hour
 
 """)</pre>
