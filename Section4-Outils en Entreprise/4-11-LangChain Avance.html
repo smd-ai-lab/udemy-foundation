@@ -1,745 +1,79 @@
 <h4>🔌 Middleware</h4>
 
-<h4>Vue d'ensemble</h4>
+<p>Le middleware est le mécanisme central de personnalisation dans LangChain . Il permet d'intercepter, modifier ou étendre le comportement de l'agent à différentes étapes.</p>
 
-<p>Le middleware est le mécanisme central de personnalisation dans LangChain v1.0. Il permet d'intercepter, modifier ou étendre le comportement de l'agent à différentes étapes.</p>
+<figure><img src="https://udemy-image-web-upload.s3.amazonaws.com/redactor/raw/article_lecture/2026-05-15_08-14-14-34e77732878c178d45b0b23c19f80a2a.jpg" width="432" height="487"></figure>
 
-<p>python</p>
+<p>Dans le cadre d'une utilisation en entreprise, il est necessaire d'utiliser les Middleware, il existe une liste préconstruite, en plus de la possibilité d'ajouter ses propres Custom Middleware.</p>
 
-<pre class="prettyprint linenums">from langchain.agents.middleware import Middleware
+<p><strong>Middleware</strong> Description</p>
 
-from typing import Any, Dict
+<p><strong>Summarization:</strong> Automatically summarize conversation history when approaching token limits.
 
-class MonMiddleware(Middleware):
+<strong>Human-in-the-loop:</strong> Pause execution for human approval of tool calls.
 
-&nbsp; &nbsp; async def before_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
+<strong>Model call limit:</strong>&nbsp; Limit the number of model calls to prevent excessive costs.
 
-&nbsp; &nbsp; &nbsp; &nbsp; print("Avant l'exécution de l'agent")
+<strong>Tool call limit:</strong> Control tool execution by limiting call counts.
 
-&nbsp; &nbsp; &nbsp; &nbsp; return state
+<strong>Model fallback:</strong>&nbsp; Automatically fallback to alternative models when primary fails.
 
-&nbsp; &nbsp; 
+<strong>PII detection:</strong> Detect and handle Personally Identifiable Information (PII).
 
-&nbsp; &nbsp; async def after_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
+<strong>To-do list:</strong>&nbsp; Equip agents with task planning and tracking capabilities.
 
-&nbsp; &nbsp; &nbsp; &nbsp; print("Après l'exécution de l'agent")
+<strong>LLM tool selector:</strong> Use an LLM to select relevant tools before calling main model.
 
-&nbsp; &nbsp; &nbsp; &nbsp; return state</pre>
+<strong>Tool retry:</strong>&nbsp; Automatically retry failed tool calls with exponential backoff.
 
-<h4>Middleware Préconstruit</h4>
+<strong>Model retry:</strong> Automatically retry failed model calls with exponential backoff.
 
-<p>LangChain fournit plusieurs middlewares prêts à l'emploi :</p>
+<strong>LLM tool emulator:</strong> Emulate tool execution using an LLM for testing purposes.
 
-<p>python</p>
+<strong>Context editing:</strong> Manage conversation context by trimming or clearing tool uses.
 
-<pre class="prettyprint linenums">from langchain.agents.middleware import (
+<strong>Shell tool:</strong>&nbsp; Expose a persistent shell session to agents for command execution.
 
-&nbsp; &nbsp; SummarizationMiddleware,
+<strong>File search:</strong> Provide Glob and Grep search tools over filesystem files.
 
-&nbsp; &nbsp; HumanInTheLoopMiddleware,
+<strong>Filesystem:</strong>&nbsp; Provide agents with a filesystem for storing context and long-term memories.
 
-&nbsp; &nbsp; ToolRetryMiddleware,
+<strong>Subagent:</strong>&nbsp; Add the ability to spawn subagents.
 
-&nbsp; &nbsp; RateLimitMiddleware
-
-)
-
-agent = create_agent(
-
-&nbsp; &nbsp; model=model,
-
-&nbsp; &nbsp; tools=outils,
-
-&nbsp; &nbsp; middleware=[
-
-&nbsp; &nbsp; &nbsp; &nbsp; # 1. Résumé automatique des longues conversations
-
-&nbsp; &nbsp; &nbsp; &nbsp; SummarizationMiddleware(
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; model="gpt-4o-mini",
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; trigger={"tokens": 1000}&nbsp; # Déclenche à 1000 tokens
-
-&nbsp; &nbsp; &nbsp; &nbsp; ),
-
-&nbsp; &nbsp; &nbsp; &nbsp; 
-
-&nbsp; &nbsp; &nbsp; &nbsp; # 2. Validation humaine avant actions sensibles
-
-&nbsp; &nbsp; &nbsp; &nbsp; HumanInTheLoopMiddleware(
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; interrupt_on={"envoyer_email": {"approval_required": True}}
-
-&nbsp; &nbsp; &nbsp; &nbsp; ),
-
-&nbsp; &nbsp; &nbsp; &nbsp; 
-
-&nbsp; &nbsp; &nbsp; &nbsp; # 3. Réessai automatique en cas d'échec
-
-&nbsp; &nbsp; &nbsp; &nbsp; ToolRetryMiddleware(
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; max_retries=3,
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; backoff_factor=2.0
-
-&nbsp; &nbsp; &nbsp; &nbsp; ),
-
-&nbsp; &nbsp; &nbsp; &nbsp; 
-
-&nbsp; &nbsp; &nbsp; &nbsp; # 4. Limitation du taux de requêtes
-
-&nbsp; &nbsp; &nbsp; &nbsp; RateLimitMiddleware(
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; requests_per_minute=60,
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; requests_per_day=1000
-
-&nbsp; &nbsp; &nbsp; &nbsp; )
-
-&nbsp; &nbsp; ]
-
-)</pre>
-
-<h4>Middleware Personnalisé</h4>
-
-<p>Exemple d'un middleware de logging :</p>
-
-<p>python</p>
-
-<pre class="prettyprint linenums">import time
-
-from langchain.agents.middleware import Middleware
-
-from typing import Any, Dict, Optional
-
-class LoggingMiddleware(Middleware):
-
-&nbsp; &nbsp; def __init__(self, log_file: str = "agent.log"):
-
-&nbsp; &nbsp; &nbsp; &nbsp; self.log_file = log_file
-
-&nbsp; &nbsp; 
-
-&nbsp; &nbsp; async def before_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
-
-&nbsp; &nbsp; &nbsp; &nbsp; self.start_time = time.time()
-
-&nbsp; &nbsp; &nbsp; &nbsp; user_message = state["messages"][-1]["content"]
-
-&nbsp; &nbsp; &nbsp; &nbsp; self._log(f"Question utilisateur: {user_message}")
-
-&nbsp; &nbsp; &nbsp; &nbsp; return state
-
-&nbsp; &nbsp; 
-
-&nbsp; &nbsp; async def after_agent(self, state: Dict[str, Any]) -&gt; Dict[str, Any]:
-
-&nbsp; &nbsp; &nbsp; &nbsp; duration = time.time() - self.start_time
-
-&nbsp; &nbsp; &nbsp; &nbsp; response = state["messages"][-1]["content"]
-
-&nbsp; &nbsp; &nbsp; &nbsp; self._log(f"Réponse (en {duration:.2f}s): {response[:100]}...")
-
-&nbsp; &nbsp; &nbsp; &nbsp; return state
-
-&nbsp; &nbsp; 
-
-&nbsp; &nbsp; def _log(self, message: str):
-
-&nbsp; &nbsp; &nbsp; &nbsp; with open(self.log_file, "a") as f:
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
-
-# Utilisation
-
-agent = create_agent(
-
-&nbsp; &nbsp; model=model,
-
-&nbsp; &nbsp; tools=outils,
-
-&nbsp; &nbsp; middleware=[LoggingMiddleware()]
-
-)</pre>
+</p>
 
 <h4>🎨 Frontend</h4>
 
-<h4>Vue d'ensemble</h4>
+<h4></h4>
 
-<p>LangChain s'intègre facilement avec différents frameworks frontend :</p>
-
-<p>python</p>
-
-<pre class="prettyprint linenums"># API FastAPI pour exposition backend
-
-from fastapi import FastAPI, HTTPException
-
-from pydantic import BaseModel
-
-app = FastAPI()
-
-class Question(BaseModel):
-
-&nbsp; &nbsp; texte: str
-
-&nbsp; &nbsp; thread_id: str
-
-@app.post("/chat")
-
-async def chat(question: Question):
-
-&nbsp; &nbsp; response = agent.invoke(
-
-&nbsp; &nbsp; &nbsp; &nbsp; {"messages": [{"role": "user", "content": question.texte}]},
-
-&nbsp; &nbsp; &nbsp; &nbsp; config={"configurable": {"thread_id": question.thread_id}}
-
-&nbsp; &nbsp; )
-
-&nbsp; &nbsp; return {"reponse": response["content"]}</pre>
-
-<p><strong>Intégration React</strong> (exemple d'appel) :</p>
-
-<p>javascript</p>
-
-<pre class="prettyprint linenums">// Client React
-
-const response = await fetch("/chat", {
-
-&nbsp; method: "POST",
-
-&nbsp; headers: { "Content-Type": "application/json" },
-
-&nbsp; body: JSON.stringify({ texte: message, thread_id: sessionId })
-
-});
-
-const data = await response.json();</pre>
+<p><br></p>
 
 <h4>⚙️ Advanced Usage</h4>
 
 <h4>1. Guardrails</h4>
 
-<p>Sécuriser les réponses de l'agent :</p>
-
-<p>python</p>
-
-<pre class="prettyprint linenums">from langchain.agents.middleware import GuardrailMiddleware
-
-def verification_securite(messages: list) -&gt; bool:
-
-&nbsp; &nbsp; """Vérifie si le message est approprié"""
-
-&nbsp; &nbsp; interdit = ["mots", "interdits", "sensibles"]
-
-&nbsp; &nbsp; dernier_message = messages[-1]["content"].lower()
-
-&nbsp; &nbsp; return not any(mot in dernier_message for mot in interdit)
-
-agent = create_agent(
-
-&nbsp; &nbsp; model=model,
-
-&nbsp; &nbsp; middleware=[
-
-&nbsp; &nbsp; &nbsp; &nbsp; GuardrailMiddleware(
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; check=verification_securite,
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; on_violation="block",&nbsp; # ou "warn", "override"
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; fallback_response="Je ne peux pas répondre à cette question."
-
-&nbsp; &nbsp; &nbsp; &nbsp; )
-
-&nbsp; &nbsp; ]
-
-)</pre>
+<p>Sécuriser les réponses de l'agent </p>
 
 <h4>2. Runtime</h4>
 
-<p>Configuration avancée du moteur d'exécution :</p>
-
-<p>python</p>
-
-<pre class="prettyprint linenums">from langgraph.graph import StateGraph
-
-from langgraph.runtime import RuntimeConfig
-
-config = RuntimeConfig(
-
-&nbsp; &nbsp; max_iterations=10,&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;# Maximum de tours agent
-
-&nbsp; &nbsp; timeout_seconds=30,&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # Timeout global
-
-&nbsp; &nbsp; retry_policy={
-
-&nbsp; &nbsp; &nbsp; &nbsp; "max_attempts": 3,
-
-&nbsp; &nbsp; &nbsp; &nbsp; "delay_seconds": 1
-
-&nbsp; &nbsp; }
-
-)
-
-agent = create_agent(
-
-&nbsp; &nbsp; model=model,
-
-&nbsp; &nbsp; tools=outils,
-
-&nbsp; &nbsp; runtime_config=config
-
-)</pre>
+<p>Configuration avancée du moteur d'exécution </p>
 
 <h4>3. Context Engineering</h4>
 
-<p>Optimisation du contexte envoyé au LLM :</p>
-
-<p>python</p>
-
-<pre class="prettyprint linenums">from langchain.agents.middleware import ContextWindowMiddleware
-
-agent = create_agent(
-
-&nbsp; &nbsp; model=model,
-
-&nbsp; &nbsp; middleware=[
-
-&nbsp; &nbsp; &nbsp; &nbsp; ContextWindowMiddleware(
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; max_tokens=4000,
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; strategy="summarize",
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; summarization_model="gpt-3.5-turbo"
-
-&nbsp; &nbsp; &nbsp; &nbsp; )
-
-&nbsp; &nbsp; ]
-
-)
-
-# Gestion manuelle du contexte
-
-agent.set_context({
-
-&nbsp; &nbsp; "user_preferences": {"language": "fr", "style": "formal"},
-
-&nbsp; &nbsp; "retrieved_documents": [...],
-
-&nbsp; &nbsp; "conversation_summary": "L'utilisateur demande des informations sur..."
-
-})</pre>
+<p>Optimisation du contexte envoyé au LLM </p>
 
 <h4>4. Model Context Protocol (MCP)</h4>
 
-<p>Protocole standardisé pour l'intégration d'outils :</p>
-
-<p>python</p>
-
-<pre class="prettyprint linenums"># Définition d'un serveur MCP
-
-from mcp import Server, Tool
-
-server = Server("mon-serveur-llm")
-
-@server.tool()
-
-async def base_connaissances(requete: str) -&gt; str:
-
-&nbsp; &nbsp; """Interroge la base de connaissances interne"""
-
-&nbsp; &nbsp; return await rechercher_vecteurs(requete)
-
-# Connexion dans LangChain
-
-from langchain.integrations.mcp import MCPConnector
-
-mcp_tools = await MCPConnector.connect("localhost:5000")
-
-agent = create_agent(model=model, tools=mcp_tools)</pre>
+<p>Protocole standardisé pour l'intégration d'outils</p>
 
 <h4>5. Human-in-the-loop (HITL)</h4>
 
-<p>Validation humaine des actions critiques :</p>
-
-<p>python</p>
-
-<pre class="prettyprint linenums">from langgraph.checkpoint import PostgresSaver
-
-# Configuration avec base de données persistante
-
-checkpointer = PostgresSaver.from_conn_string("postgresql://user:pass@localhost/db")
-
-agent = create_agent(
-
-&nbsp; &nbsp; model=model,
-
-&nbsp; &nbsp; tools=[envoyer_paiement, supprimer_fichier, envoyer_email],
-
-&nbsp; &nbsp; middleware=[
-
-&nbsp; &nbsp; &nbsp; &nbsp; HumanInTheLoopMiddleware(
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; interrupt_on={
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "envoyer_paiement": {
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "always": True,
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "require_comment": True
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; },
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "supprimer_fichier": {
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "check_paths": ["/important/*"],
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "approval_message": "Confirmez-vous la suppression ?"
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
-
-&nbsp; &nbsp; &nbsp; &nbsp; )
-
-&nbsp; &nbsp; ],
-
-&nbsp; &nbsp; checkpointer=checkpointer
-
-)
-
-# L'agent s'interrompt automatiquement pour validation
-
-# Reprise après validation humaine</pre>
+<p>Validation humaine des actions critiques</p>
 
 <h4>6. Retrieval (RAG - Retrieval-Augmented Generation)</h4>
 
-<p>Augmentation de la génération par recherche documentaire :</p>
+<p>Augmentation de la génération par recherche documentaire</p>
 
-<p>python</p>
+<h4>7. Long-term Memory</h4>
 
-<pre class="prettyprint linenums">from langchain.vectorstores import Chroma
-
-from langchain.embeddings import OpenAIEmbeddings
-
-from langchain.document_loaders import TextLoader
-
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-
-# 1. Chargement et indexation des documents
-
-docs = TextLoader("ma_base_connaissances.txt").load()
-
-splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-
-chunks = splitter.split_documents(docs)
-
-vectorstore = Chroma.from_documents(
-
-&nbsp; &nbsp; chunks, 
-
-&nbsp; &nbsp; OpenAIEmbeddings(),
-
-&nbsp; &nbsp; collection_name="ma_base"
-
-)
-
-# 2. Intégration dans l'agent
-
-from langchain.agents.middleware import RetrievalMiddleware
-
-agent = create_agent(
-
-&nbsp; &nbsp; model=model,
-
-&nbsp; &nbsp; middleware=[
-
-&nbsp; &nbsp; &nbsp; &nbsp; RetrievalMiddleware(
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; vectorstore=vectorstore,
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; k=5,&nbsp; # Récupère les 5 documents les plus pertinents
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; strategy="relevance_score",
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; threshold=0.7
-
-&nbsp; &nbsp; &nbsp; &nbsp; )
-
-&nbsp; &nbsp; ]
-
-)</pre>
-
-<h4>7. Long-term Memory (Mémoire Long Terme)</h4>
-
-<p>Maintien d'informations persistantes entre les sessions :</p>
-
-<p>python</p>
-
-<pre class="prettyprint linenums">from langgraph.store import RedisStore
-
-from langchain.agents.middleware import LongTermMemoryMiddleware
-
-# Stockage persistant (Redis par exemple)
-
-store = RedisStore(host="localhost", port=6379)
-
-agent = create_agent(
-
-&nbsp; &nbsp; model=model,
-
-&nbsp; &nbsp; middleware=[
-
-&nbsp; &nbsp; &nbsp; &nbsp; LongTermMemoryMiddleware(
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; store=store,
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; memory_types=["user_preferences", "facts", "history"],
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; auto_save=True,
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; retrieval_strategy="semantic",&nbsp; # ou "recency", "importance"
-
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; max_memories=50
-
-&nbsp; &nbsp; &nbsp; &nbsp; )
-
-&nbsp; &nbsp; ]
-
-)
-
-# L'agent se souvient des préférences de l'utilisateur
-
-agent.invoke({
-
-&nbsp; &nbsp; "messages": [{"role": "user", "content": "Je préfère les réponses en français"}]
-
-}, config={"configurable": {"user_id": "alice@email.com"}})
-
-# Dans une conversation ultérieure
-
-agent.invoke({
-
-&nbsp; &nbsp; "messages": [{"role": "user", "content": "Dans quelle langue dois-je répondre ?"}]
-
-}, config={"configurable": {"user_id": "alice@email.com"}})
-
-# Répondra en français</pre>
-
-<h4>🤖 Agent Development</h4>
-
-<h4>LangSmith Studio</h4>
-
-<p>Environnement de débogage et de test :</p>
-
-<p>python</p>
-
-<pre class="prettyprint linenums"># Configuration du tracking avec LangSmith
-
-from langsmith import Client
-
-client = Client()
-
-client.create_project("mon-projet-agent")
-
-# Lancement d'une session de test
-
-from langsmith.run_helpers import traceable
-
-@traceable
-
-def tester_agent(question: str):
-
-&nbsp; &nbsp; return agent.invoke({"messages": [{"role": "user", "content": question}]})
-
-# Interface LangSmith Studio (Web UI)
-
-# Permet de :
-
-# - Visualiser les traces d'exécution
-
-# - Analyser les tokens et coûts
-
-# - Comparer les performances entre versions
-
-# - Debugger les erreurs avec "time travel"
-
-# Examen du graphe d'exécution
-
-print(agent.get_graph().draw_ascii())</pre>
-
-<h4>Agent Chat UI</h4>
-
-<p>Interface utilisateur prête à l'emploi :</p>
-
-<p>bash</p>
-
-<pre class="prettyprint linenums"># Installation de l'interface
-
-pip install langchain-agent-ui
-
-# Lancement du serveur
-
-langchain serve --ui --port 8000</pre>
-
-<p>python</p>
-
-<pre class="prettyprint linenums"># Intégration personnalisée avec l'interface
-
-from langchain_agent_ui import ChatInterface, AgentConfig
-
-ui = ChatInterface(
-
-&nbsp; &nbsp; agent_config=AgentConfig(
-
-&nbsp; &nbsp; &nbsp; &nbsp; agent=agent,
-
-&nbsp; &nbsp; &nbsp; &nbsp; title="Mon Assistant IA",
-
-&nbsp; &nbsp; &nbsp; &nbsp; theme="dark",
-
-&nbsp; &nbsp; &nbsp; &nbsp; features=["file_upload", "voice_input", "history"]
-
-&nbsp; &nbsp; )
-
-)
-
-ui.run(host="0.0.0.0", port=8080)</pre>
-
-<h4>☁️ Deploy with LangSmith</h4>
-
-<h4>Déploiement</h4>
-
-<p>bash</p>
-
-<pre class="prettyprint linenums"># Installation de LangSmith CLI
-
-pip install langsmith-cli
-
-# Configuration du déploiement
-
-langsmith deploy init
-
-# Déploiement vers le cloud
-
-langsmith deploy push \
-
-&nbsp; --project mon-projet \
-
-&nbsp; --environment production \
-
-&nbsp; --region eu-west-1</pre>
-
-<p><strong>Fichier de configuration (</strong><code><strong>langsmith.yaml</strong></code><strong>)</strong> :</p>
-
-<p>yaml</p>
-
-<pre class="prettyprint linenums">project_name: mon-agent-production
-
-version: 1.0.0
-
-agent:
-
-&nbsp; entrypoint: src/agent.py:create_app
-
-&nbsp; model: openai:gpt-4o-mini
-
-&nbsp; tools:
-
-&nbsp; &nbsp; - src.tools.database
-
-&nbsp; &nbsp; - src.tools.api
-
-scaling:
-
-&nbsp; min_replicas: 2
-
-&nbsp; max_replicas: 10
-
-&nbsp; target_cpu_utilization: 70
-
-resources:
-
-&nbsp; memory: 2Gi
-
-&nbsp; cpu: 1</pre>
-
-<h4>Observabilité</h4>
-
-<p>python</p>
-
-<pre class="prettyprint linenums">from langsmith import Client
-
-from langsmith.wrappers import wrap_openai
-
-# Configuration du monitoring
-
-client = Client()
-
-client.trace_sessions = True
-
-# Métriques automatiquement collectées
-
-# - Latence par appel d'outil
-
-# - Taux d'erreur par type de requête
-
-# - Coût par session utilisateur
-
-# - Distribution des tokens utilisés
-
-# Tableau de bord personnalisé
-
-from langsmith.dashboard import MetricsDashboard
-
-dashboard = MetricsDashboard(
-
-&nbsp; &nbsp; project="mon-agent-production",
-
-&nbsp; &nbsp; metrics=[
-
-&nbsp; &nbsp; &nbsp; &nbsp; "response_time_p95",
-
-&nbsp; &nbsp; &nbsp; &nbsp; "success_rate",
-
-&nbsp; &nbsp; &nbsp; &nbsp; "cost_per_user",
-
-&nbsp; &nbsp; &nbsp; &nbsp; "tool_usage_frequency"
-
-&nbsp; &nbsp; ],
-
-&nbsp; &nbsp; alert_rules={
-
-&nbsp; &nbsp; &nbsp; &nbsp; "error_rate": {"&gt;": 0.05, "action": "email"},
-
-&nbsp; &nbsp; &nbsp; &nbsp; "cost_per_day": {"&gt;": 100, "action": "slack"}
-
-&nbsp; &nbsp; }
-
-)</pre>
-
-<p><strong>Exemples de requêtes d'observabilité</strong> :</p>
-
-<p>python</p>
-
-<pre class="prettyprint linenums"># Analyse des performances
-
-client.run_analytics("""
-
-&nbsp; &nbsp; SELECT 
-
-&nbsp; &nbsp; &nbsp; &nbsp; date_trunc('hour', timestamp) as hour,
-
-&nbsp; &nbsp; &nbsp; &nbsp; AVG(latency_ms) as avg_latency,
-
-&nbsp; &nbsp; &nbsp; &nbsp; COUNT(CASE WHEN error THEN 1 END) / COUNT(*) as error_rate
-
-&nbsp; &nbsp; FROM traces
-
-&nbsp; &nbsp; WHERE project = 'mon-agent-production'
-
-&nbsp; &nbsp; GROUP BY hour
-
-""")</pre>
+<p>Maintien d'informations persistantes entre les sessions</p>
