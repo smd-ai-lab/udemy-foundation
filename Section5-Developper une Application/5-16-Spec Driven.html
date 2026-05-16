@@ -1,0 +1,39 @@
+<p>Aujourd’hui, le « spec-driven » dans le développement agentique s’impose comme le contre‑modèle du « vibe coding » : on formalise d’abord l’intention et les contraintes dans des specs structurées, puis on laisse les agents (coding, planning, vérification) agir plutôt que coder directement à partir de prompts vagues.</p>
+
+<h4>Le principe</h4>
+
+<p>L’idée centrale est de passer d’un flux « Prompt → Code » à « Intention → Specification → Implementation ».</p>
+
+<p>Concrètement, les specs comprennent souvent :</p>
+
+<ul><li><p>Requirements fonctionnels et non fonctionnels.</p></li><li><p>Contrats / API / schema de données comme contraintes du générateur.</p></li><li><p>Règles de validation + critères d’acceptation qui se traduisent en tests ou checks automatiques.</p></li></ul>
+
+<h4>Méthodologie émergente</h4>
+
+<p>On commence à voir une méthode assez standardisée (les noms, la granularité peuvent varier selon les modèles) :</p>
+
+<ul><li><p>Phase <strong>Specify</strong> : un agent aide à transformer une idée, un besoi, une fonctionnalité... en une spec complète (user stories, contraintes d’archi, interfaces).</p></li><li><p>Phase <strong>Plan</strong> : un agent de planification dérive un plan technique (tâches, fichiers, outils à appeler, migration DB, etc.).</p></li><li><p>Phase <strong>Implement</strong> : un ou plusieurs coding agents produisent le code guidé strictement par la spec et le plan.</p></li><li><p>Phase <strong>Verify</strong> : un agent vérificateur compare le résultat à la spec, génère ou exécute des tests, et signale les écarts.</p></li></ul>
+
+<p>Cette approche vise à garder le contrôle humain sur l’intention et l’architecture, tout en déléguant le travail d’implémentation aux agents.</p>
+
+<h4>Patterns agentiques typiques</h4>
+
+<p>Dans le contexte agentic, le spec-driven sert de « rails » pour des architectures multi‑agents plus sophistiquées.</p>
+
+<p>Patterns qu’on voit émerger :</p>
+
+<ul><li><p><strong>a/Coordinator + b/Implementors + c/Validator</strong> : un agent a/ découpe la spec en sous‑specs, les délègue à des agents implémenteurs b/, puis un agent validateur c/ (LLM‑as‑judge) essaie activement de casser le résultat par rapport à la spec.</p></li><li><p><strong>e/Adversarial agent pattern</strong> : l’implémenteur b/ optimise pour « finir la tâche », le vérificateur c/&nbsp;optimise pour « trouver des violations de la spec », ce qui réduit les hallucinations et les dérives par rapport aux contraintes.</p></li><li><p><strong>Spec‑as‑memory</strong> : la spec sert de mémoire persistante partagée entre agents et sessions, au même titre que le contexte courant, l’historique du projet ou la base de connaissance partagée pour tous les projets.</p></li></ul>
+
+<p>Sur les frameworks agentiques (LangChain‑like, orchestrateurs maison, frameworks listés en 2026), la spec devient un artefact que tu peux versionner, charger, transformer en prompts, et utiliser pour router les tâches entre agents.</p>
+
+<h4>Lien avec tool calling et contrats</h4>
+
+<p>Le spec‑driven s’aligne aussi avec l’évolution des APIs LLM et du tool calling.</p>
+
+<ul><li><p>Les <strong>schemas de tools</strong> (JSON Schema, Pydantic, etc.) jouent le rôle de « specs exécutables » : ils contraignent ce que l’agent peut faire et comment il appelle les fonctions.</p></li><li><p>De plus en plus de libs encapsulent un outil (fonction) + son modèle de données + la logique de validation, puis exposent un schema spécifique aux modèles OpenAI / autres, ce qui permet aux agents de respecter les contrats sans halluciner de paramètres manquants.</p></li><li><p>Certains frameworks parlent explicitement de « spec‑driven tools » où l’agent doit d’abord dériver un plan d’appels d’outils cohérent avec la spec avant d’exécuter quoi que ce soit.</p></li></ul>
+
+<h4>Situation actuelle (mai 2026)</h4>
+
+<p>À ce stade (mi‑2026), on peut résumer la situation ainsi :</p>
+
+<ul><li><p>Le spec‑driven n’est plus une curiosité mais un <strong>courant dominant</strong> chez les équipes qui font du dev assisté/agentique sérieusement, surtout pour des bases de code non triviales.</p></li><li><p>Les bonnes pratiques convergent vers : spec claire, plan explicite, agents spécialisés (plan, implémentation, vérif), et tests dérivés quasi automatiquement de la spec.</p></li><li><p>Les outils commencent à s’industrialiser (toolkits open source, cours dédiés, intégration dans frameworks agentiques et IDE), mais il n’y a pas encore un standard universel de format de spec.</p></li><li><p>Le gros gain perçu est la réduction de la dette cognitive et des surprises d’architecture : on garde la main sur le design, on délègue la production de code.</p></li></ul>
