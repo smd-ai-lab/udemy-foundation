@@ -1,0 +1,15 @@
+<h4>MCP</h4>
+
+<p>Signifie <strong>Model Context Protocol</strong> : c’est un standard ouvert qui permet à une application d’IA de se connecter à des outils, des bases de données et des services externes de façon uniforme. L’idée est de donner aux modèles un accès sécurisé à du contexte vivant, au lieu de rester limités à leurs données d’entraînement.</p>
+
+<h4>À quoi ça sert</h4>
+
+<p>MCP sert à éviter de recréer une intégration différente pour chaque outil ou chaque modèle. Avec MCP, un seul serveur peut exposer des capacités comme lire des fichiers, interroger une base de données, appeler une API ou lancer une action métier, et plusieurs clients IA compatibles peuvent s’y connecter.</p>
+
+<h4>Comment ça marche</h4>
+
+<p>Le schéma est simple : un <strong>client MCP</strong> fait la demande, un <strong>serveur MCP</strong> fournit les outils ou données, et l’<strong>hôte</strong> est l’application qui embarque le client, par exemple un IDE ou un Agent IA. La communication est standardisée, souvent via JSON-RPC, avec des transports adaptés au local ou au distant.</p>
+
+<h4>Pourquoi c’est important</h4>
+
+<p>MCP facilite l’interopérabilité entre éditeurs d’IA et sources de données.</p>
