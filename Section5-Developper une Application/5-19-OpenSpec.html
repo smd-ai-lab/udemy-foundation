@@ -1,0 +1,157 @@
+<h4>🏗️ La philosophie d'OpenSpec</h4>
+
+<p>OpenSpec se distingue par plusieurs principes fondamentaux :</p>
+
+<h4>"Brownfield-first"</h4>
+
+<p>Contrairement à d'autres outils comme <strong>Spec Kit</strong> de GitHub (optimal pour les projets "greenfield" de zéro), OpenSpec est conçu pour les <strong>projets réels avec du code existant</strong>.</p>
+
+<p><strong>Pourquoi c'est important ?</strong> La plupart des développeurs ne partent jamais de zéro. Vous devez modifier, étendre, refactoriser du code qui existe déjà. OpenSpec excelle dans ce cas d'usage "1→n" (ajouter à l'existant) plutôt que "0→1" (créer depuis rien).</p>
+
+<h4>Fluide, pas rigide</h4>
+
+<p>OpenSpec rejette l'approche waterfall : vous n'êtes pas enfermé dans des phases rigides. Vous pouvez :</p>
+
+<ul><li><p>Modifier n'importe quel artefact à tout moment</p></li><li><p>Itérer sur les specs avant et pendant l'implémentation</p></li><li><p>Revenir en arrière si nécessaire</p></li></ul>
+
+<h4>📁 La structure de projet OpenSpec</h4>
+
+<p>Voici comment OpenSpec organise votre projet :</p>
+
+<p>text</p>
+
+<pre class="prettyprint linenums">mon-projet/
+
+├── openspec/
+
+│   ├── specs/              # 📌 SOURCE&nbsp;DE&nbsp;VÉRITÉ
+
+│   │       └── spec.md     # "Ce que le système fait MAINTENANT"
+
+│   ├── changes/            # 🔄 Changements en cours
+
+│   │   ├── first-version/  # Un changement spécifique
+
+│   │   │   ├── proposal.md # Pourquoi ? (le problème à résoudre)
+
+│   │   │   ├── design.md   # Comment ? (approche technique)
+
+│   │   │   ├── tasks.md    # Quoi ? (liste d'implémentation)
+
+│   │   │   └── specs/      # Delta : ce qui va changer
+
+│   │   │           └── spec.md  # "Ce qui sera AJOUTÉ/MODIFIÉ"
+
+│   │   │
+
+│   │   └── archive/        # ✅ Changements terminés
+
+│   │
+
+│   └── project.md          # Contexte global du projet</pre>
+
+<h4>3.1 La distinction clé : <code>specs/</code> vs <code>changes/</code></h4>
+
+<ul><li><p><code><strong>openspec/specs/</strong></code> : la <strong>source de vérité</strong> - ce que le système fait réellement</p></li><li><p><code><strong>openspec/changes/</strong></code> : les <strong>propositions</strong> - ce que vous voulez changer</p></li></ul>
+
+<p>Cette séparation est fondamentale : elle permet de savoir exactement ce qui est actuel vs ce qui est en cours.</p>
+
+<h4>3.2 Le format Delta</h4>
+
+<p>Quand vous proposez un changement, le fichier <code>spec.md</code> dans <code>changes/</code> ne contient <strong>pas</strong> la spec complète, mais uniquement un <strong>delta</strong> (un "patch") :</p>
+
+<p>markdown</p>
+
+<pre class="prettyprint linenums"># Delta for Auth
+
+## ADDED Requirements
+
+### Requirement: Two-Factor Authentication
+
+The system MUST require a second factor during login.
+
+#### Scenario: OTP required
+
+- WHEN a user submits valid credentials
+
+- THEN an OTP challenge is required
+
+## MODIFIED Requirements
+
+### Requirement: Session Management
+
+[description de ce qui change...]</pre>
+
+<p>Pendant l'archivage, OpenSpec fusionne automatiquement ce delta dans la spec principale.</p>
+
+<h4>🔄 Le workflow complet</h4>
+
+<h4>Étape 1 : Démarrer un projet</h4>
+
+<p>bash</p>
+
+<pre class="prettyprint linenums"># Installation
+
+npm install -g @fission-ai/openspec@latest
+
+# Dans votre projet
+
+cd llm-leaderboard
+
+openspec init</pre>
+
+<p>L'initialisation vous guide pour :</p>
+
+<ol><li><p>Choisir votre assistant IA (Claude Code, Cursor, Copilot...)</p></li><li><p>Créer la structure <code>openspec/</code></p></li></ol>
+
+<p><strong>Astuce</strong> : Remplissez <code>openspec/project.md</code> avec le contexte de votre projet (tech stack, conventions, objectifs). L'IA l'utilisera pour générer des specs cohérentes.</p>
+
+<h4>Étape 2 : Explorer une idée </h4>
+
+<p>bash</p>
+
+<pre class="prettyprint linenums">/opsx:explore Build an application which get data from SOURCES.md relative to LLM models performance. Persist data in light sql database, with a date DD/MM/YYYY hh:mm:ss. We add sources furthermore, the application will be able to add new source without losing information. No need UI or backend service for this version first version 0.0.1. It's only get a source, persist. When adding a new source, get it persist it. And so on we could add whatever kind of source based on URL web site for this version.</pre>
+
+<p>Cette commande permet d'explorer, poser des questions, inspecter le code existant <strong>sans créer de fichiers</strong>. C'est utile quand l'idée n'est pas encore claire.</p>
+
+<h4>Étape 3 : Proposer un changement</h4>
+
+<p>bash</p>
+
+<pre class="prettyprint linenums">/opsx:propose first-version</pre>
+
+<p>L'IA génère automatiquement :</p>
+
+<ul><li><p><code>proposal.md</code> : pourquoi ce changement est nécessaire</p></li><li><p><code>design.md</code> : l'approche technique (optionnel)</p></li><li><p><code>tasks.md</code> : la checklist d'implémentation</p></li><li><p><code>specs/</code> : les deltas de spécifications</p></li></ul>
+
+<h4>Étape 4 : Valider et itérer</h4>
+
+<p>bash</p>
+
+<pre class="prettyprint linenums"># Vérifier la structure
+
+openspec validate first-version
+
+# Voir ce qui a été généré
+
+openspec show first-version</pre>
+
+<p>L'IA met à jour les fichiers en conséquence. <strong>Vous pouvez itérer autant que nécessaire</strong>.</p>
+
+<h4>Étape 5 : Implémenter</h4>
+
+<p>bash</p>
+
+<pre class="prettyprint linenums">/opsx:apply</pre>
+
+<p>L'IA suit <code>tasks.md</code> étape par étape, en cochant les cases au fur et à mesure. Elle ne touche que ce qui a été planifié.</p>
+
+<h4>Étape 6 : Archiver</h4>
+
+<p>bash</p>
+
+<pre class="prettyprint linenums">/opsx:archive</pre>
+
+<p>Cette commande :</p>
+
+<ol><li><p>Fusionne les deltas dans <code>openspec/specs/</code></p></li><li><p>Déplace le dossier vers <code>changes/archive/</code></p></li><li><p>Met à jour la source de vérité</p></li></ol>
