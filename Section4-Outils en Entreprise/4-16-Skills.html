@@ -1,0 +1,55 @@
+<h4><strong>Skill</strong></h4>
+
+<p>est un module de connaissances ou de procédures qui aide un agent/assistant IA à mieux exécuter une tâche précise. Il contient généralement des instructions, parfois des scripts ou des ressources, et sert à rendre le comportement de l’assistant plus cohérent et plus reproductible.</p>
+
+<p>Voir ici un exemple:&nbsp;<a href="https://www.skillhub.club/skills/obra-superpowers-systematic-debugging" target="_blank" rel="noopener noreferrer">systematic-debugging</a></p>
+
+<p>Autre exemple avec un DESIGN.md (origine du "concept" google stitch):&nbsp;<a href="https://getdesign.md/spotify/design-md" target="_blank" rel="noopener noreferrer">spotify/design-md </a></p>
+
+<h4>Le Skill s'occupe du Comment faire</h4>
+
+<p>Le modèle reçoit un guide clair sur <em>comment</em> faire une tâche donnée.</p>
+
+<h4>À quoi ça sert</h4>
+
+<p>Un Skill sert surtout à :</p>
+
+<ul><li><p>améliorer la cohérence des réponses et des actions.</p></li><li><p>faire gagner du temps sur des tâches répétitives.</p></li><li><p>intégrer un savoir métier ou organisationnel sans tout réexpliquer à chaque fois.</p></li><li><p>systématiser la forme</p></li></ul>
+
+<p><br></p>
+
+<p>Exemple, source:&nbsp;<a href="https://www.skillhub.club/skills/tachyon-beep-skillpacks-using-system-archaeologist" target="_blank" rel="noopener noreferrer">using-system-archaeologist</a></p>
+
+<pre class="prettyprint linenums">---name: using-system-archaeologistdescription: Use when analyzing existing codebases to generate architecture documentation - coordinates subagent-driven exploration with mandatory workspace structure, validation gates, and pressure-resistant workflows---
+
+# System Archaeologist - Codebase Architecture Analysis
+
+## Overview
+
+Analyze existing codebases through coordinated subagent exploration to produce comprehensive architecture documentation with C4 diagrams, subsystem catalogs, and architectural assessments.
+
+**Core principle:** Systematic archaeological process with quality gates prevents rushed, incomplete analysis.
+
+---
+
+## Context Conservation (CRITICAL)
+
+**You are a COORDINATOR, not an analyst.** Your primary context is precious - preserve it for orchestration decisions, not detailed code reading.
+
+### The Delegation Imperative
+
+| Task Type | Your Role | Subagent Role ||-----------|-----------|---------------|| Subsystem analysis | Spawn `codebase-explorer` | Read files, produce catalog entries || Validation | Spawn `analysis-validator` | Check contracts, produce reports || Diagram generation | Spawn diagram subagent | Generate Mermaid/PlantUML || Quality assessment | Spawn quality subagent | Analyze patterns, produce assessment || Security surface | Spawn security subagent | Map boundaries, flag concerns |
+
+### What You DO (Coordinator):- Create workspace and coordination plan- Make orchestration decisions (parallel vs sequential)- Spawn subagents with clear task specifications- Read subagent outputs (summaries, not raw files)- Make proceed/revise decisions based on validation- Synthesize final deliverables from subagent work
+
+### What You DO NOT Do (Delegate Instead):- Read implementation files directly (subagent reads, you get summary)- Perform detailed pattern analysis (spawn specialist)- Write catalog entries yourself (spawn codebase-explorer)- Validate your own work (spawn analysis-validator)- Generate diagrams from scratch (spawn diagram agent)
+
+### Rationalization Blockers
+
+| Thought | Reality ||---------|---------|| "I'll just quickly read this file" | Spawn subagent. Your context is for coordination. || "It's faster if I do it myself" | Subagents preserve your context for later decisions. || "Only a few files to check" | "Few" files become many. Delegate from the start. || "I need to understand the code" | You need to understand the STRUCTURE. Subagents report findings. || "Spawning overhead isn't worth it" | Context exhaustion is worse. Always delegate detailed work. |
+
+---
+
+## When to Use
+
+- User requests architecture documentation for existing codebase- Need to understand unfamiliar system architecture- Creating design docs for legacy systems- Analyzing codebases of any size (small to large)- User mentions: "analyze codebase", "architecture documentation", "system design", "generate diagrams"</pre>
