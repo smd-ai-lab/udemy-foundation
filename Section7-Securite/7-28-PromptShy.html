@@ -1,0 +1,69 @@
+<p>🧩 Vue d’ensemble du malware PromptSpy</p>
+
+<p>PromptSpy est un malware Android qui combine <strong>ingénierie sociale, abus des Services d’Accessibilité, utilisation de Gemini pour comprendre l’UI</strong> et un <strong>module VNC chiffré</strong> pour espionner et contrôler le téléphone à distance.</p>
+
+<p>source:&nbsp;<a href="https://thehackernews.com/2026/02/promptspy-android-malware-abuses-google.html" target="_blank" rel="noopener noreferrer">promptspy-android-malware-abuses-google</a></p>
+
+<h4>Résumé du workflow</h4>
+
+<p>En simplifiant, son cycle de vie ressemble à ces étapes :</p>
+
+<ul><li><p>📥 1. <strong>Ingénierie Sociale &amp; installation</strong> : site frauduleux → fausse appli bancaire → installation du payload PromptSpy.</p></li><li><p>⚙️ 2. <strong>Permissions &amp; persistance</strong> : obtention du Service d’Accessibilité, enregistrement sur BOOT, service au premier plan.</p></li><li><p>🌐 3. <strong>C2 &amp; clé Gemini</strong> : connexion chiffrée AES, réception de la clé API Gemini et d’autres paramètres.</p></li><li><p>🤖 4. <strong>Persistance pilotée par Gemini</strong> : dumps XML de l’UI → requêtes à Gemini → réponses JSON (actions) → verrouillage dans les applis récentes.</p></li><li><p>🛡️ 5. <strong>Anti‑suppression</strong>: surcouches transparentes au‑dessus des boutons « arrêter / désinstaller ».</p></li><li><p>👁️ 6. <strong>Surveillance &amp;&nbsp;Capture</strong> : collecte d’infos système, liste d’apps, PIN, captures d’écran et enregistrements vidéo.</p></li><li><p>🕹️ 7. <strong>Contrôle distant VNC</strong> : module VNC + AES, prise de contrôle complète de l’appareil et exfiltration continue des données.</p></li></ul>
+
+<h4>Visuellement</h4>
+
+<figure><img src="https://udemy-image-web-upload.s3.amazonaws.com/redactor/raw/article_lecture/2026-05-17_07-08-49-46e049a852da78c855b89e1b0ddb7e04.png"></figure>
+
+<h4>Workflow detaillé</h4>
+
+<h4>📥 1. Ingenierie Sociale /&nbsp;Installation</h4>
+
+<ul><li><p>Le malware se présente comme une <strong>fausse application bancaire/finance</strong>, par exemple « MorganArg », distribuée via un site frauduleux comme <code>mgardownload[.]com</code>.</p></li><li><p>Le premier APK (dropper) affiche un faux site de banque et invite l’utilisateur à installer une « nouvelle version » / « mise à jour » : cette seconde appli est le <strong>payload PromptSpy</strong> (app-release.apk), installée manuellement par la victime.</p></li></ul>
+
+<h4>⚙️ 2. Permissions/Setup</h4>
+
+<ul><li><p>Au premier lancement, PromptSpy demande l’activation du <strong>Service d’Accessibilité</strong>, ce qui lui donne la capacité de lire le contenu de l’écran et d’effectuer des actions (taps, swipes, etc.) à la place de l’utilisateur.</p></li><li><p>Il s’enregistre ensuite sur l’événement <code>BOOT_COMPLETED</code> et peut exécuter un <strong>service au premier plan</strong>, ce qui lui permet de se relancer au démarrage et de rester actif plus longtemps en arrière‑plan.</p></li></ul>
+
+<h4>🌐 3. Contact avec le C2 et clé Gemini</h4>
+
+<ul><li><p>Le malware se connecte à son <strong>serveur de commande et contrôle (C2)</strong> via un canal basé sur VNC, avec un <strong>chiffrement AES</strong> pour protéger le trafic.</p></li><li><p>Par ce canal, les opérateurs peuvent lui transmettre notamment une <strong>clé API Gemini</strong>, dont il aura besoin pour appeler l’API de Gemini et utiliser l’IA dans sa boucle de persistance.</p></li></ul>
+
+<h4>🤖 4. Persistance pilotée par Gemini (verrouillage dans les apps récentes)</h4>
+
+<p>Objectif : empêcher Android ou l’utilisateur de tuer facilement l’appli, en la <strong>verrouillant/pinnant dans l’écran des applications récentes</strong> (souvent matérialisé par une icône de cadenas).</p>
+
+<h4>📝 4.1 Capture et sérialisation de l’UI</h4>
+
+<ul><li><p>PromptSpy ouvre l’écran des <strong>Applications récentes</strong> sur le téléphone.</p></li><li><p>Il utilise l’Accessibilité pour produire un <strong>dump XML de l’interface</strong> : texte de chaque élément, type (bouton, vue, etc.), package, et coordonnées exactes (<code>bounds</code>) sur l’écran.</p></li></ul>
+
+<h4>📡 4.2 Construction de la requête vers Gemini</h4>
+
+<ul><li><p>Le code contient un <strong>prompt en langage naturel</strong> codé en dur qui définit le rôle de Gemini comme <em>« assistant d’automatisation Android »</em> et décrit précisément le <strong>format JSON</strong> attendu en sortie (status, action, coordonnées…).</p></li><li><p>PromptSpy construit une <strong>requête HTTP(S) POST</strong> vers l’API Gemini qui contient :</p><ul><li><p>ce prompt d’instruction,</p></li><li><p>le <strong>XML de l’écran</strong> en contexte,</p></li><li><p>l’identifiant du <strong>modèle Gemini</strong> à utiliser, lui aussi fixé dans le code,</p></li><li><p>la <strong>clé API Gemini</strong> fournie par le C2, insérée dans les en‑têtes ou paramètres.</p></li></ul></li></ul>
+
+<h4>🔁 4.3 Réponse JSON de Gemini et boucle d’actions</h4>
+
+<ul><li><p>Gemini traite le XML et renvoie une <strong>réponse JSON</strong> avec notamment :</p><ul><li><p><code>status</code> (IN_PROGRESS / COMPLETED / IMPOSSIBLE),</p></li><li><p><code>action_type</code> (TAP, LONG_CLICK, SWIPE, etc.),</p></li><li><p>des coordonnées ou vecteurs de swipe, et parfois une explication (« reasoning »).</p></li></ul></li><li><p>PromptSpy parse ce JSON et exécute l’action correspondante via l’Accessibilité (par exemple : long‑tap sur la carte MorganArg, puis tap sur l’icône de cadenas pour la verrouiller).</p></li><li><p>Il génère ensuite un <strong>nouveau dump XML</strong> de l’UI, l’envoie à nouveau à Gemini, et répète la boucle jusqu’à ce que l’IA signale la tâche comme terminée (<code>status = COMPLETED</code>).</p></li></ul>
+
+<p>Résultat : le malware obtient une <strong>persistance robuste</strong>, car Gemini lui permet d’adapter ses gestes aux changements de design entre versions Android, surcouches OEM, thèmes, etc., là où un script d’auto‑click classique casserait facilement.</p>
+
+<h4>🛡️ 5. Anti suppression</h4>
+
+<ul><li><p>Quand l’utilisateur tente de <strong>désinstaller l’appli</strong> ou de <strong>désactiver le Service d’Accessibilité</strong>, PromptSpy affiche des <strong>rectangles transparents</strong> au‑dessus des boutons sensibles (ceux dont le texte contient par exemple « stop », « end », « clear », « Uninstall »).</p></li><li><p>Ces surcouches interceptent les interactions : l’utilisateur croit appuyer sur « Forcer l’arrêt » ou « Désinstaller », mais clique en réalité sur la vue transparente du malware, rendant l’opération inefficace et la suppression très difficile en mode normal.</p></li></ul>
+
+<p>La contremesure recommandée est de redémarrer l’appareil en <strong>Mode sans échec</strong>, où les applis tierces ne tournent pas, puis de supprimer l’appli malveillante via Paramètres → Applications.</p>
+
+<h4>👁️ 6. Surveillance Capture données</h4>
+
+<p>Une fois en place et persistant, PromptSpy passe en <strong>mode espion</strong> :</p>
+
+<ul><li><p>Il collecte des <strong>informations système</strong> (modèle, version Android, etc.) et la <strong>liste des applications installées</strong>, pour cartographier l’environnement.</p></li><li><p>Il peut intercepter des <strong>entrées utilisateur sensibles</strong>, notamment le <strong>PIN/mot de passe de l’écran de verrouillage</strong>, en observant les interactions sur les champs cibles (GUI Input Capture).</p></li><li><p>Il est capable d’effectuer des <strong>captures d’écran</strong> et des <strong>enregistrements vidéo de l’écran</strong>, en particulier pendant l’utilisation d’applications spécifiées par le serveur.</p></li><li><p>Il surveille l’état <strong>écran allumé/éteint</strong> et l’application actuellement au premier plan afin de déclencher la collecte au bon moment.</p></li></ul>
+
+<p>Toutes ces données (PIN, listes d’apps, captures, vidéos) sont ensuite préparées pour exfiltration vers le C2.</p>
+
+<h4>🕹️ 7. Contrôle à distance via VNC chiffré</h4>
+
+<ul><li><p>Le cœur de la charge utile repose sur un module <strong>VNC intégré</strong> qui ouvre un accès distant complet à l’appareil compromis.</p></li><li><p>La communication avec le serveur de l’attaquant passe par le protocole <strong>VNC</strong>, encapsulé et <strong>chiffré en AES</strong> avec une clé intégrée au malware.</p></li></ul>
+
+<p>Pour l’attaquant, cela permet de :</p>
+
+<ul><li><p><strong>Voir l’écran en temps réel</strong> comme s’il regardait directement le téléphone de la victime.</p></li><li><p><strong>Contrôler l’appareil</strong> (taps, swipes, saisie de texte, navigation) en s’appuyant sur les Services d’Accessibilité et le canal VNC.</p></li><li><p>Déclencher ou récupérer des <strong>captures d’écran, enregistrements d’écran et autres données</strong> via ce canal chiffré, de manière continue.</p></li></ul>
